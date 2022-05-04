@@ -31,16 +31,16 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
-          echo "::set-env name=s3existflag::no"
+          echo "::set-env name=S3EXIST::no"
           echo "S3 bucket exist for operate"
         elseif
-          echo "::set-env name=s3existflag::yes"
+          echo "::set-env name=S3EXIST::yes"
           echo "S3 bucket not exist job will abort"
         fi
 
   create-foundation1:
     needs: [check-s3-bucket]
-    if: ${{ $S3EXIST == 'yes' }}
+    if: ${{ S3EXIST == 'yes' }}
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
