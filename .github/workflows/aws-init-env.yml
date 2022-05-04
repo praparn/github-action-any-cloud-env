@@ -34,7 +34,8 @@ jobs:
       # Create S3 bucket for housing state file
     - name: Create S3 bucket for housing state file
       run: |
-        if aws s3api head-bucket --bucket "${{ secrets.AWS_BUCKETNAME }}" 2>/dev/null; then
+        if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
+        then
         aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --acl private --region ${{ secrets.AWS_REGION }} --create-bucket-configuration LocationConstraint=${{ secrets.AWS_REGION }} > ./result/aws-init-env-result.txt
         fi
 
