@@ -10,6 +10,13 @@ on:
 jobs:
   create-environment:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./aws/
+    
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+
     steps:
       # Checkout code
     - uses: actions/checkout@master
@@ -26,7 +33,9 @@ jobs:
       # Create S3 bucket for housing state file
     - name: Create S3 bucket for housing state file
       run: |
-        aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --region ${{ secrets.AWS_REGION }} --acl private > ./aws/result/aws-init-env-result.txt
+        pwd
+        ls -lh
+        aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --region ${{ secrets.AWS_REGION }} --acl private > ./result/aws-init-env-result.txt
 
       # Sync commit back to master
     - uses: actions-js/push@master
