@@ -61,9 +61,9 @@ jobs:
       # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
       run: |
-       cp ./99.Systemplate/00_provider.tf ./1.Environment/01_BaseEnvironment/00_provider.tf
-       cp ./99.Systemplate/global_variable.auto.tfvars ./1.Environment/01_BaseEnvironment/global_variable.auto.tfvars
-       cp ./99.Systemplate/global_variables.tf ./1.Environment/01_BaseEnvironment/global_variables.tf
+       cp ../99.Systemplate/00_provider.tf ./1.Environment/01_BaseEnvironment/00_provider.tf
+       cp ../99.Systemplate/global_variable.auto.tfvars ./1.Environment/01_BaseEnvironment/global_variable.auto.tfvars
+       cp ../99.Systemplate/global_variables.tf ./1.Environment/01_BaseEnvironment/global_variables.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment/g" ./00_provider.tf
        ls -lh
        pwd 
@@ -137,11 +137,11 @@ jobs:
     # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
       run: |
-       cp ./99.Systemplate/00_provider.tf ./1.Environment/02_InitialParameter/00_provider.tf
-       cp ./99.Systemplate/global_variable.auto.tfvars ./1.Environment/02_InitialParameter/global_variable.auto.tfvars
-       cp ./99.Systemplate/global_variables.tf ./1.Environment/02_InitialParameter/global_variables.tf
-       cp ./99.Systemplate/system_variable.auto.tfvars ./1.Environment/02_InitialParameter/system_variable.auto.tfvars
-       cp ./99.Systemplate/system_variables.tf ./1.Environment/02_InitialParameter/system_variables.tf
+       cp ../99.Systemplate/00_provider.tf ./1.Environment/02_InitialParameter/00_provider.tf
+       cp ../99.Systemplate/global_variable.auto.tfvars ./1.Environment/02_InitialParameter/global_variable.auto.tfvars
+       cp ../99.Systemplate/global_variables.tf ./1.Environment/02_InitialParameter/global_variables.tf
+       cp ../99.Systemplate/system_variable.auto.tfvars ./1.Environment/02_InitialParameter/system_variable.auto.tfvars
+       cp ../99.Systemplate/system_variables.tf ./1.Environment/02_InitialParameter/system_variables.tf
        sed -i -e "s/<keyname>/02_InitialParameter/g" ./00_provider.tf
        ls -lh
        pwd 
