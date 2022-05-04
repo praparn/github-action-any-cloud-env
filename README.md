@@ -310,7 +310,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-destroy-env-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.jpg" alt="githubaction" width="800" height="400">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws4.png" alt="githubaction" width="800" height="400">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
