@@ -51,7 +51,7 @@ jobs:
     needs: [create-foundation1]
     runs-on: ubuntu-latest
     env:
-      working-directory: ./aws/1.Environment/01_BaseEnvironment/
+      working-directory: /aws/1.Environment/01_BaseEnvironment/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
@@ -61,6 +61,12 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
+    - name: Setup system configruation
+      run: |
+        # Test
+        pwd
+        ls -lh
+        
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
