@@ -43,7 +43,7 @@ jobs:
 
 
   create-foundation2:
-    needs: create-foundation1
+    needs: [create-foundation1]
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/01_BaseEnvironment
@@ -102,7 +102,7 @@ jobs:
 
 
   create-foundation3:
-    needs: [create-foundation1, create-foundation2]
+    needs: [create-foundation2]
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/02_InitialParameter
@@ -148,7 +148,7 @@ jobs:
 
 
   create-foundation4:
-    needs: [create-foundation1, create-foundation2, , create-foundation3]
+    needs: [create-foundation3]
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/02_InitialParameter
