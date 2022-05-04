@@ -61,11 +61,6 @@ jobs:
       with:
         terraform_version: 1.1.9
 
-      # Switch environment to 01_BaseEnvironment
-    - name: Switch environment to 01_BaseEnvironment
-      run: |
-        echo "::set-env name=working-directory::./aws/1.Environment/01_BaseEnvironment/"
-
     - name: Terraform readiness verify
       id: fmt1
       run: terraform fmt -check
