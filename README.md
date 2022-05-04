@@ -13,6 +13,7 @@
 ### Remark
 
 * All credential in this project was designed to store on "secrets" on github. If you new with this. Please kindly following [GitHub Secrets](https://github.com/Azure/actions-workflow-samples/blob/master/assets/create-secrets-for-GitHub-workflows.md)
+* As project use github action for commit and push to update result. So please allow GITHUB_TOKEN to read and write permissions in repository [Github Workflow Permission](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token)
 * As project are coverage multiple cloud provider. So when you fork/clone this repository in action. You can consider to remove unused cloud provider's folder
 
 
