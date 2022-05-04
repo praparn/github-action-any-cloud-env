@@ -65,7 +65,6 @@ jobs:
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment/g" ./00_provider.tf
-       cat ./00_provider.tf
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -141,7 +140,6 @@ jobs:
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
        sed -i -e "s/<keyname>/02_InitialParameter/g" ./00_provider.tf
-       cat ./00_provider.tf
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
