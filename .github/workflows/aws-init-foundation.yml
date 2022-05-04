@@ -61,13 +61,6 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
-    - name: Test Debug
-      working-directory: ./aws/1.Environment/01_BaseEnvironment/
-      run: |
-        # Test
-        pwd
-        ls -lh
-
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -75,25 +68,25 @@ jobs:
 
     - name: Terraform readiness verify
       id: fmt1
-      run: terraform fmt -check
+      run: terraform fmt -check ./1.Environment/01_BaseEnvironment/
       continue-on-error: true
     
     - name: Terraform initialize
       id: init1
-      run: terraform init -input=false
+      run: terraform init -input=false ./1.Environment/01_BaseEnvironment/
 
     - name: Terraform validation configuration step1
       id: validate1
-      run: terraform validate -no-color
+      run: terraform validate -no-color ./1.Environment/01_BaseEnvironment/
 
     - name: Terraform configuration step2
       id: plan1
-      run: terraform plan -no-color -out=tfplan -input=false
+      run: terraform plan -no-color -out=tfplan -input=false ./1.Environment/01_BaseEnvironment/
       continue-on-error: true
 
     - name: Terraform create
       id: apply1
-      run: terraform apply -input=false tfplan
+      run: terraform apply -input=false tfplan ./1.Environment/01_BaseEnvironment/
       continue-on-error: true
 
     - name: Terraform export output
