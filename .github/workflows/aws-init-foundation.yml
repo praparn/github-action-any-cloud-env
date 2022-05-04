@@ -1,4 +1,4 @@
-name: 'AKS initial cluster'
+name: 'AWS initial foundation'
 on:
   push:
     tags:
@@ -27,6 +27,8 @@ jobs:
       # Prepare Configuration and Seed file 
     - name: Setup system configruation
       run: | 
+        pwd
+        ls -lh
         # Clone template file and preparation
         cp ./99.Systemplate/00_provider-manual.tftemplate ./99.Systemplate/00_provider.tf
         sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
