@@ -166,7 +166,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/praparn/github-action-any-cloud-env.git
+   cd ~ && git clone https://github.com/praparn/github-action-any-cloud-env.git
    ```
 
 2. Create key-pair for use with environment and copy file "cert-template.pub" to path "1.Environment/02_InitialParameter"
@@ -201,11 +201,11 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    ```sh
    git pull
    git tag #check existing tag
-   echo "aws-init-env-yyyymmddhhmmss" > ./result/result-aws
+   echo "aws-init-foundation-yyyymmddhhmmss" > ./result/result-aws
    git add -A
    git commit -m "Any comment that you need"
-   git tag aws-init-env-yyyymmddhhmmss -m "aws-init-env-yyyymmddhhmmss"
-   git push --atomic origin <branch name> aws-init-env-yyyymmddhhmmss
+   git tag aws-init-foundation-yyyymmddhhmmss -m "aaws-init-foundation-yyyymmddhhmmss"
+   git push --atomic origin <branch name> aws-init-foundation-yyyymmddhhmmss
    ```
 
 8. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.jpg" alt="githubaction" width="800" height="400">

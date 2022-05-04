@@ -2,24 +2,19 @@ name: 'AKS initial cluster'
 on:
   push:
     tags:
-      - 'aks-cluster-create*'
+      - 'aws-init-foundation*'
   pull_request:
     tags:
-      - 'aks-cluster-create*'
+      - 'aws-init-foundation*'
 
 jobs:
-  create-cluster:
+  create-foundation:
     runs-on: ubuntu-latest
     env:
-      working-directory: ./azure-aks/
-      TF_VAR_ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      TF_VAR_ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      TF_VAR_ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      TF_VAR_ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      working-directory: ./aws/
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
 
     defaults:
       run:
@@ -29,73 +24,60 @@ jobs:
     - uses: actions/checkout@master
       name: Git checkout code
 
-      # Seed file for system configuration
+      # Prepare Configuration and Seed file 
     - name: Setup system configruation
       run: | 
-        # Sed to setup environment
-        sed -i -e "s/###resource_group###/${{ secrets.AZURE_RESOURCEGROUP }}/g" ./terraform.tfvars
-        sed -i -e "s/###storage_accname###/${{ secrets.AZURE_STORAGEACCOUNT }}/g" ./terraform.tfvars
-        sed -i -e "s/###cluster_name###/${{ secrets.AZURE_CLUSTERNAME }}/g" ./terraform.tfvars
-        sed -i -e "s/###resource_group###/${{ secrets.AZURE_RESOURCEGROUP }}/g" ./00_provider.tf
-        sed -i -e "s/###storage_accname###/${{ secrets.AZURE_STORAGEACCOUNT }}/g" ./00_provider.tf
-        sed -i -e "s/###cluster_name###/${{ secrets.AZURE_CLUSTERNAME }}/g" ./00_provider.tf
+        # Clone template file and preparation
+        cp ./99.Systemplate/00_provider-manual.tftemplate ./99.Systemplate/00_provider.tf
+        sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
+        sed -i -e "s/<region>/${{ secrets.AWS_REGION }}/g" ./99.Systemplate/00_provider.tf
+
+        # Copy all properties file to target folder
+        cp ./99.Systemplate/00_provider.tf ./1.Environment/01_BaseEnvironment/00_provider.tf
+        cp ./99.Systemplate/00_provider.tf ./1.Environment/02_InitialParameter/00_provider.tf
+        cp ./99.Systemplate/global_variable.auto.tfvars ./1.Environment/01_BaseEnvironment/global_variable.auto.tfvars
+        cp ./99.Systemplate/global_variables.tf ./1.Environment/01_BaseEnvironment/global_variables.tf
+        cp ./99.Systemplate/global_variable.auto.tfvars ./1.Environment/02_InitialParameter/global_variable.auto.tfvars
+        cp ./99.Systemplate/global_variables.tf ./1.Environment/02_InitialParameter/global_variables.tf
         
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.1.8
+        terraform_version: 1.1.9
 
-    - name: AKS readiness verify
+    - name: Terraform readiness verify
       id: fmt
       run: terraform fmt -check
       continue-on-error: true
     
-    - name: AKS initialize
+    - name: Terraform initialize
       id: init
       run: terraform init -input=false
 
-    - name: AKS validation configuration step1
+    - name: Terraform validation configuration step1
       id: validate
       run: terraform validate -no-color
 
-    - name: AKS validation configuration step2
+    - name: Terraform configuration step2
       id: plan
       run: terraform plan -no-color -out=tfplan -input=false
       continue-on-error: true
 
-    - name: AKS create cluster
+    - name: Terraform create
       id: apply
       run: terraform apply -input=false tfplan
       continue-on-error: true
 
     - name: AKS export output
       id: output
-      run: terraform output kube_config > aks-config
+      run: terraform output > ../../99.Systemplate/system_variable.auto.tfvars
       continue-on-error: true
 
-    - name: Export configuration (KUBECONFIG)
-      id: export
-      run: |
-        awk 'NR>=2 && NR<=21' ./aks-config > ./aks-config.tmp
-        sed -i -e "s/<<EOT//g" ./aks-config.tmp
-        tail -n +2 "./aks-config.tmp" > ./aks-config
-        rm ./aks-config.tmp
-
-    - name: Install kubectl
-      uses: azure/setup-kubectl@v2.0
-      id: installkubectl
-
-    - name: Deploy test application on AKS
-      id: deploy
-      run: |
-          kubectl get nodes --kubeconfig=./aks-config
-          kubectl apply -f ./demo/backend.yaml --kubeconfig=./aks-config
-          kubectl apply -f ./demo/frontend.yaml --kubeconfig=./aks-config
-          kubectl apply -f ./demo/client.yaml --kubeconfig=./aks-config
-          kubectl apply -f ./demo/management.yaml --kubeconfig=./aks-config
-          kubectl get ing -n=management-ui --kubeconfig=aks-config
-          echo "Please wait 3-5 min before check kubectl get ing -n=management-ui"
-      continue-on-error: true
+      # CleanUp process
+    - name: CleanUp temporary file
+      run: | 
+        rm ./global_variable.auto.tfvars
+        rm ./global_variables.tf
 
     - uses: actions-js/push@master
       name: Commit and push result back
