@@ -21,12 +21,12 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET }}
-        aws-region: ${{ secret.REGION }}
+        aws-region: ${{ secret.AWS_REGION }}
 
       # Create S3 bucket for housing state file
     - name: Create S3 bucket for housing state file
       run: |
-        aws s3api create-bucket --bucket ${{ secrets.BUCKETNAME }} --region ${{ secrets.REGION }} --acl private >> ./aws/result/aws-init-env-result.txt
+        aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --region ${{ secrets.AWS_REGION }} --acl private >> ./aws/result/aws-init-env-result.txt
 
       # Sync commit back to master
     - uses: actions-js/push@master

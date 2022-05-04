@@ -146,13 +146,13 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
     <AWS Secret Key>
   }
   ```
-  - {REGION}: Regional for housing AWS environment.
+  - {AWS_REGION}: Regional for housing AWS environment.
   ```sh
   {
     <AWS Region>
   }
   ```
-  - {BUCKETNAME}: AWS bucket name for housing "statefile". This name need very unique in region of AWS. Recommend is some format of "<organizationname>-<projectname>-<yyyymmdd>".
+  - {AWS_BUCKETNAME}: AWS bucket name for housing "statefile". This name need very unique in region of AWS. Recommend is some format of "<organizationname>-<projectname>-<yyyymmdd>".
   ```sh
   {
     <AWS Bucket Name>
