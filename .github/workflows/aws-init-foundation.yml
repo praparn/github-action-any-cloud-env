@@ -51,7 +51,7 @@ jobs:
     needs: [create-foundation1]
     runs-on: ubuntu-latest
     env:
-      working-directory: ./aws/1.Environment/01_BaseEnvironment/
+      working-directory: ./aws/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
@@ -61,6 +61,12 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
+
+    - name: Debuging
+      run: |
+        pwd
+        ls -lh
+        
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -68,25 +74,25 @@ jobs:
 
     - name: Terraform readiness verify
       id: fmt1
-      run: terraform fmt -check ./1.Environment/01_BaseEnvironment/
+      run: terraform fmt -check
       continue-on-error: true
     
     - name: Terraform initialize
       id: init1
-      run: terraform init -input=false ./1.Environment/01_BaseEnvironment/
+      run: terraform init -input=false
 
     - name: Terraform validation configuration step1
       id: validate1
-      run: terraform validate -no-color ./1.Environment/01_BaseEnvironment/
+      run: terraform validate -no-color
 
     - name: Terraform configuration step2
       id: plan1
-      run: terraform plan -no-color -out=tfplan -input=false ./1.Environment/01_BaseEnvironment/
+      run: terraform plan -no-color -out=tfplan
       continue-on-error: true
 
     - name: Terraform create
       id: apply1
-      run: terraform apply -input=false tfplan ./1.Environment/01_BaseEnvironment/
+      run: terraform apply -input=false tfplan
       continue-on-error: true
 
     - name: Terraform export output
