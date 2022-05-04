@@ -152,7 +152,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
     <AWS Region>
   }
   ```
-  - {AWS_BUCKETNAME}: AWS bucket name for housing "statefile". This name need very unique in region of AWS. Recommend is some format of "<organizationname>-<projectname>-<yyyymmdd>".
+  - {AWS_BUCKETNAME}: AWS bucket name for housing "statefile". This name need very unique in region of AWS. Ex "<organizationname>-<projectname>-<yyyymmdd>".
   ```sh
   {
     <AWS Bucket Name>
