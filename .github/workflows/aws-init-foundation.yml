@@ -48,7 +48,7 @@ jobs:
       # Switch environment to 01_BaseEnvironment
     - name: Switch environment to 01_BaseEnvironment
       run: |
-        cd ./1.Environment/01_BaseEnvironment/
+        echo "::set-env name=working-directory::./aws/1.Environment/01_BaseEnvironment/"
 
     - name: Terraform readiness verify
       id: fmt1
@@ -87,7 +87,7 @@ jobs:
       # Switch environment to 02_InitialParameter and Import system configuration
     - name: Switch environment to 02_InitialParameter and Import system configuration
       run: |
-        cd ./1.Environment/02_InitialParameter/
+        echo "::set-env name=working-directory::./aws/1.Environment/02_InitialParameter/"
         cp ./99.Systemplate/system_variable.auto.tfvars ./1.Environment/02_InitialParameter/system_variable.auto.tfvars
         cp ./99.Systemplate/system_variables.tf ./1.Environment/02_InitialParameter/system_variables.tf
 
