@@ -62,9 +62,9 @@ jobs:
 
     steps:
     - name: Test Debug
+      working-directory: ./aws/1.Environment/01_BaseEnvironment/
       run: |
         # Test
-        cd ./aws/1.Environment/01_BaseEnvironment/
         pwd
         ls -lh
 
