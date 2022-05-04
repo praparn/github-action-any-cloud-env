@@ -7,7 +7,7 @@ on:
     tags:
       - 'aws-init-foundation*'
 env:
-  S3EXIST: yes
+  s3exits: yes
 
 jobs:
   check-s3-bucket:
@@ -31,9 +31,9 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
-          echo "::set-env name=S3EXIST::no"
+          echo "::set-env name=s3exits::no"
         elseif
-          echo "::set-env name=S3EXIST::yes"
+          echo "::set-env name=s3exits::yes"
         fi
 
   create-foundation1:
@@ -57,7 +57,7 @@ jobs:
       # Verify S3 flab
     - name: Check S3 Flag
       run: |
-        if ${{env.S3EXIST}} == 'no' ; then
+        if ${{env.s3exits}} == 'no' ; then
           echo "Terminate Job"
           exit 1
         fi
