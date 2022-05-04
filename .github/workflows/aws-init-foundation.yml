@@ -26,16 +26,14 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    # Create S3 bucket for housing state file
-    - name: Create S3 bucket for housing state file
+    # Verify S3 bucket for housing state file
+    - name: Verify S3 bucket for housing state file
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
           echo "::set-env name=S3EXIST::no"
-          echo "S3 bucket exist for operate"
         elseif
           echo "::set-env name=S3EXIST::yes"
-          echo "S3 bucket not exist job will abort"
         fi
 
   create-foundation1:
@@ -52,6 +50,10 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
+      # Checkout code
+    - uses: actions/checkout@master
+      name: Git checkout code
+
       # Verify S3 flab
     - name: Check S3 Flag
       run: |
@@ -59,10 +61,6 @@ jobs:
           echo "Terminate Job"
           exit 1
         fi
-
-      # Checkout code
-    - uses: actions/checkout@master
-      name: Git checkout code
 
       # Prepare Configuration and Seed file 
     - name: Setup system configruation
