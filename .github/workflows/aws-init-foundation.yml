@@ -51,30 +51,30 @@ jobs:
         cd ./1.Environment/01_BaseEnvironment/
 
     - name: Terraform readiness verify
-      id: fmt
+      id: fmt1
       run: terraform fmt -check
       continue-on-error: true
     
     - name: Terraform initialize
-      id: init
+      id: init1
       run: terraform init -input=false
 
     - name: Terraform validation configuration step1
-      id: validate
+      id: validate1
       run: terraform validate -no-color
 
     - name: Terraform configuration step2
-      id: plan
+      id: plan1
       run: terraform plan -no-color -out=tfplan -input=false
       continue-on-error: true
 
     - name: Terraform create
-      id: apply
+      id: apply1
       run: terraform apply -input=false tfplan
       continue-on-error: true
 
-    - name: AKS export output
-      id: output
+    - name: Terraform export output
+      id: output1
       run: terraform output > ../../99.Systemplate/system_variable.auto.tfvars
       continue-on-error: true
 
@@ -92,25 +92,25 @@ jobs:
         cp ./99.Systemplate/system_variables.tf ./1.Environment/02_InitialParameter/system_variables.tf
 
     - name: Terraform readiness verify
-      id: fmt
+      id: fmt2
       run: terraform fmt -check
       continue-on-error: true
     
     - name: Terraform initialize
-      id: init
+      id: init2
       run: terraform init -input=false
 
     - name: Terraform validation configuration step1
-      id: validate
+      id: validate2
       run: terraform validate -no-color
 
     - name: Terraform configuration step2
-      id: plan
+      id: plan2
       run: terraform plan -no-color -out=tfplan -input=false
       continue-on-error: true
 
     - name: Terraform create
-      id: apply
+      id: apply2
       run: terraform apply -input=false tfplan
       continue-on-error: true
 
