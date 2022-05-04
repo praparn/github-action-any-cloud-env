@@ -35,7 +35,7 @@ jobs:
       run: |
         pwd
         ls -lh
-        aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --acl private > ./result/aws-init-env-result.txt
+        aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --acl private --region ap-southeast-1 --create-bucket-configuration LocationConstraint=${{ secrets.AWS_BUCKETNAME }} > ./result/aws-init-env-result.txt
 
       # Sync commit back to master
     - uses: actions-js/push@master
