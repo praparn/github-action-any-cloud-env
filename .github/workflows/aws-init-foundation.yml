@@ -66,7 +66,6 @@ jobs:
        cp ../99.Systemplate/global_variables.tf ./1.Environment/01_BaseEnvironment/global_variables.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment/g" ./00_provider.tf
        ls -lh
-       pwd 
        cat ./00_provider.tf
 
     - name: Load Terraform to operate
