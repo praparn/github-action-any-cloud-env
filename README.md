@@ -41,6 +41,7 @@
 
 
 ## AWS Cloud Provider
+<br><img src="img/aws.png" alt="AWS" width="400" height="250">
 
 AWS Cloud Provider: Automation to create all environment on AWS cloud
 
@@ -158,7 +159,6 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
   }
   ```
 
-<br><img src="img/aws.png" alt="AWS" width="600" height="600">
 
 ### Initial Environment and Foundation (work directory: ./aws)
 
