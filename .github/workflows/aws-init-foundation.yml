@@ -40,7 +40,7 @@ jobs:
 
   create-foundation1:
     needs: [check-s3-bucket]
-    if: $s3existflag == 'yes'
+    if: ${{ env.s3existflag }} == 'yes'
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
