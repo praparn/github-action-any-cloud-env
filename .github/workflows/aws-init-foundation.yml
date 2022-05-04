@@ -1,4 +1,4 @@
-name: 'AWS initial foundation'
+name: 'AWS Initial Foundation'
 on:
   push:
     tags:
@@ -26,9 +26,7 @@ jobs:
 
       # Prepare Configuration and Seed file 
     - name: Setup system configruation
-      run: | 
-        pwd
-        ls -lh
+      run: |
         # Clone template file and preparation
         cp ./99.Systemplate/00_provider.tftemplate ./99.Systemplate/00_provider.tf
         sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
@@ -46,6 +44,11 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.1.9
+
+      # Switch environment to 01_BaseEnvironment
+    - name: Switch environment to 01_BaseEnvironment
+      run: |
+        cd ./1.Environment/01_BaseEnvironment/
 
     - name: Terraform readiness verify
       id: fmt
@@ -80,6 +83,44 @@ jobs:
       run: | 
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
+
+      # Switch environment to 02_InitialParameter and Import system configuration
+    - name: Switch environment to 02_InitialParameter and Import system configuration
+      run: |
+        cd ./1.Environment/02_InitialParameter/
+        cp ./99.Systemplate/system_variable.auto.tfvars ./1.Environment/02_InitialParameter/system_variable.auto.tfvars
+        cp ./99.Systemplate/system_variables.tf ./1.Environment/02_InitialParameter/system_variables.tf
+
+    - name: Terraform readiness verify
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+    
+    - name: Terraform initialize
+      id: init
+      run: terraform init -input=false
+
+    - name: Terraform validation configuration step1
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform configuration step2
+      id: plan
+      run: terraform plan -no-color -out=tfplan -input=false
+      continue-on-error: true
+
+    - name: Terraform create
+      id: apply
+      run: terraform apply -input=false tfplan
+      continue-on-error: true
+
+      # CleanUp process
+    - name: CleanUp temporary file
+      run: | 
+        rm ./global_variable.auto.tfvars
+        rm ./global_variables.tf
+        rm ./system_variable.auto.tfvars
+        rm ./system_variables.tf
 
     - uses: actions-js/push@master
       name: Commit and push result back
