@@ -21,7 +21,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET }}
-        aws-region: ${{ secret.AWS_REGION }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
       # Create S3 bucket for housing state file
     - name: Create S3 bucket for housing state file
