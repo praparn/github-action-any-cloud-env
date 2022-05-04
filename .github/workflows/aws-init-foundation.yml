@@ -6,9 +6,41 @@ on:
   pull_request:
     tags:
       - 'aws-init-foundation*'
+env:
+  s3existflag: 'yes'
 
 jobs:
+  check-s3-bucket:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    steps:
+    # Configure AWS credential with region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Create S3 bucket for housing state file
+    - name: Create S3 bucket for housing state file
+      run: |
+        if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
+        then
+          echo "::set-env name=s3existflag::no"
+          echo "S3 bucket exist for operate"
+        elseif
+          echo "::set-env name=s3existflag::yes"
+          echo "S3 bucket not exist job will abort"
+        fi
+
   create-foundation1:
+    needs: [check-s3-bucket]
+    if: $s3existflag == 'yes'
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
