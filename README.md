@@ -146,7 +146,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
     <AWS Secret Key>
   }
   ```
-  - {REGION}: Regional for housing AWS environment. Please follow this KB [AWS secret key](https://aws.amazon.com/th/premiumsupport/knowledge-center/create-access-key/)
+  - {REGION}: Regional for housing AWS environment.
   ```sh
   {
     <AWS Region>
