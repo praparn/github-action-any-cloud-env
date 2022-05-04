@@ -41,12 +41,17 @@ jobs:
         cp ./99.Systemplate/global_variable.auto.tfvars ./1.Environment/02_InitialParameter/global_variable.auto.tfvars
         cp ./99.Systemplate/global_variables.tf ./1.Environment/02_InitialParameter/global_variables.tf
 
+        # Verify file properties
+        pwd
+        ls ./1.Environment/01_BaseEnvironment/
+        ls ./1.Environment/02_InitialParameter/
+
 
   create-foundation2:
     needs: [create-foundation1]
     runs-on: ubuntu-latest
     env:
-      working-directory: ./aws/1.Environment/01_BaseEnvironment
+      working-directory: ./aws/1.Environment/01_BaseEnvironment/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
@@ -100,7 +105,7 @@ jobs:
     needs: [create-foundation2]
     runs-on: ubuntu-latest
     env:
-      working-directory: ./aws/02_InitialParameter
+      working-directory: ./aws/02_InitialParameter/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
@@ -146,7 +151,7 @@ jobs:
     needs: [create-foundation3]
     runs-on: ubuntu-latest
     env:
-      working-directory: ./aws/1.Environment/02_InitialParameter
+      working-directory: ./aws/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
