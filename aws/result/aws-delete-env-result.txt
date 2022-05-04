@@ -1,3 +1,0 @@
-{
-    "Location": "http://praparn-github-action-any-cloud-env.s3.amazonaws.com/"
-}
