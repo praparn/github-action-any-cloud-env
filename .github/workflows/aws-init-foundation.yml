@@ -40,7 +40,6 @@ jobs:
 
   create-foundation1:
     needs: [check-s3-bucket]
-    if: ${{ S3EXIST == 'yes' }}
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
@@ -53,6 +52,14 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
+      # Verify S3 flab
+    - name: Check S3 Flag
+      run: |
+        if ${{env.S3EXIST}} == 'no' ; then
+          echo "Terminate Job"
+          exit 1
+        fi
+
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
