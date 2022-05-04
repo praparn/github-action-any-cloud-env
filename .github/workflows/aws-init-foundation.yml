@@ -61,9 +61,10 @@ jobs:
         working-directory: ${{env.working-directory}}
 
     steps:
-    - name: Setup system configruation
+    - name: Test Debug
       run: |
         # Test
+        cd ./aws/1.Environment/01_BaseEnvironment/
         pwd
         ls -lh
 
