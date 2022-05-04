@@ -8,7 +8,7 @@ on:
       - 'aws-init-foundation*'
 
 jobs:
-  create-foundation:
+  create-foundation1:
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
@@ -19,6 +19,7 @@ jobs:
     defaults:
       run:
         working-directory: ${{env.working-directory}}
+
     steps:
       # Checkout code
     - uses: actions/checkout@master
@@ -39,7 +40,22 @@ jobs:
         cp ./99.Systemplate/global_variables.tf ./1.Environment/01_BaseEnvironment/global_variables.tf
         cp ./99.Systemplate/global_variable.auto.tfvars ./1.Environment/02_InitialParameter/global_variable.auto.tfvars
         cp ./99.Systemplate/global_variables.tf ./1.Environment/02_InitialParameter/global_variables.tf
-        
+
+
+  create-foundation2:
+    needs: create-foundation1
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./aws/01_BaseEnvironment
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+
+    steps:
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -84,13 +100,21 @@ jobs:
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
 
-      # Switch environment to 02_InitialParameter and Import system configuration
-    - name: Switch environment to 02_InitialParameter and Import system configuration
-      run: |
-        echo "::set-env name=working-directory::./aws/1.Environment/02_InitialParameter/"
-        cp ./99.Systemplate/system_variable.auto.tfvars ./1.Environment/02_InitialParameter/system_variable.auto.tfvars
-        cp ./99.Systemplate/system_variables.tf ./1.Environment/02_InitialParameter/system_variables.tf
 
+  create-foundation3:
+    needs: [create-foundation1, create-foundation2]
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./aws/02_InitialParameter
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+
+    steps:
     - name: Terraform readiness verify
       id: fmt2
       run: terraform fmt -check
@@ -122,6 +146,20 @@ jobs:
         rm ./system_variable.auto.tfvars
         rm ./system_variables.tf
 
+
+  create-foundation4:
+    needs: [create-foundation1, create-foundation2, , create-foundation3]
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./aws/02_InitialParameter
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+    steps:
     - uses: actions-js/push@master
       name: Commit and push result back
       with:
