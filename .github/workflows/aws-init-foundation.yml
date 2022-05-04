@@ -58,7 +58,7 @@ jobs:
     - name: Setup system configruation
       run: |
         # Clone template file and preparation
-        if [[ ${{s3exits}} == *"no"* ]]; then
+        if [[ ${{ env.s3exits }} == *"no"* ]]; then
         exit 1
         fi
         cp ./99.Systemplate/00_provider.tftemplate ./99.Systemplate/00_provider.tf
