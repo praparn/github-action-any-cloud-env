@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
+      flag-create: 'yes'
     
     defaults:
       run:
@@ -33,14 +34,9 @@ jobs:
       # Create S3 bucket for housing state file
     - name: Create S3 bucket for housing state file
       run: |
-      bucketstatus=$(aws s3api head-bucket --bucket "{{ secrets.AWS_BUCKETNAME }}" 2>&1)
-      if echo "${bucketstatus}" | grep 'Not Found';
-        then
+        if aws s3api head-bucket --bucket "${{ secrets.AWS_BUCKETNAME }}" 2>/dev/null; then
         aws s3api create-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --acl private --region ${{ secrets.AWS_REGION }} --create-bucket-configuration LocationConstraint=${{ secrets.AWS_REGION }} > ./result/aws-init-env-result.txt
-        echo "Bucket created"
-      else
-      echo "Bucket already exists";
-      fi
+        fi
 
       # Sync result back to repository
     - uses: actions-js/push@master
