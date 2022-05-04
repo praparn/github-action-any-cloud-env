@@ -7,7 +7,7 @@ on:
     tags:
       - 'aws-init-foundation*'
 env:
-  s3exits: yes
+  s3exits: 'yes'
 
 jobs:
   check-s3-bucket:
@@ -39,6 +39,7 @@ jobs:
   create-foundation1:
     needs: [check-s3-bucket]
     runs-on: ubuntu-latest
+    if: "contains(${{env.s3exits}}, 'yes')"
     env:
       working-directory: ./aws/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
@@ -53,14 +54,6 @@ jobs:
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
-
-      # Verify S3 flab
-    - name: Check S3 Flag
-      run: |
-        if ${{env.s3exits}} == 'no' ; then
-          echo "Terminate Job"
-          exit 1
-        fi
 
       # Prepare Configuration and Seed file 
     - name: Setup system configruation
