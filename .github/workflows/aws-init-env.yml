@@ -1,0 +1,36 @@
+name: 'AWS initial basic environment on AWS Portal'
+on:
+  push:
+    tags:
+      - 'aws-init-env*'
+  pull_request:
+    tags:
+      - 'aws-init-env*'
+
+jobs:
+  create-environment:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code
+    - uses: actions/checkout@master
+      name: Git checkout code
+
+      # Configure AWS credential with region
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: ${{ secret.REGION }}
+
+      # Create S3 bucket for housing state file
+    - name: Create S3 bucket for housing state file
+      run: |
+        aws s3api create-bucket --bucket ${{ secrets.BUCKETNAME }} --region ${{ secrets.REGION }} --acl private >> ./aws/result/aws-init-env-result.txt
+
+      # Sync commit back to master
+    - uses: actions-js/push@master
+      name: Commit and push result back
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        message: "Commit for update result create environment"
