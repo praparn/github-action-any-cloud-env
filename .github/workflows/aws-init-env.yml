@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       working-directory: ./aws/
-      flag-create: 'yes'
     
     defaults:
       run:

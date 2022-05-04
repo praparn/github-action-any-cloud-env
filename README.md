@@ -158,6 +158,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
     <AWS Bucket Name>
   }
   ```
+<br><img src="img/aws1.png" alt="githubaction" width="800" height="300">
 
 
 ### Initial Environment and Foundation (work directory: ./aws)
@@ -188,7 +189,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-env-yyyymmddhhmmss
    ```
 
-5. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws1.jpg" alt="githubaction" width="800" height="300">
+5. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.png" alt="githubaction" width="800" height="300"><br><img src="img/aws3.png" alt="githubaction" width="800" height="500">
 
 6. Edit properties for create AWS foundation on file "99.Systemplate/global_variable.auto.tfvars" (Please check description on file "99.Systemplate/global_variables.tf")
    ```sh
