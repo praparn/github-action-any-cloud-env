@@ -96,7 +96,7 @@ jobs:
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
-       sed -i -e "s/<keyname>/01_BaseEnvironment/g" ./00_provider.tf
+       sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -110,7 +110,7 @@ jobs:
     
     - name: Terraform initialize
       id: init1
-      run: terraform init -input=false
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secket_key=${{ secrets.AWS_SECRET }}" -input=false
 
     - name: Terraform validation configuration step1
       id: validate1
@@ -171,7 +171,7 @@ jobs:
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
-       sed -i -e "s/<keyname>/02_InitialParameter/g" ./00_provider.tf
+       sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -185,7 +185,7 @@ jobs:
     
     - name: Terraform initialize
       id: init2
-      run: terraform init -input=false
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secket_key=${{ secrets.AWS_SECRET }}" -input=false
 
     - name: Terraform validation configuration step1
       id: validate2
