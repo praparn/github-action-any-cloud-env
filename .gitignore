@@ -1,8 +1,6 @@
 # IGNORE repository
 **/.terraform/*
 **/tfplan
-# lock file
-.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate

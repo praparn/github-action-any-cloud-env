@@ -101,6 +101,7 @@ jobs:
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
        fi
+       cat ./00_provider.tf
        
 
     - name: Load Terraform to operate
