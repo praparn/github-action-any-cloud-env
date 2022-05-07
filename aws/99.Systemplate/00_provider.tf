@@ -5,6 +5,7 @@ terraform {
     bucket = "praparn-github-action-any-cloud-env"
     key    = "<keyname>"
     region = "ap-southeast-1"
+    encrypt = true
   }
 }
 
