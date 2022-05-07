@@ -96,12 +96,14 @@ jobs:
       run: |
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
-       if [ ! -f ./00_provider.tf]
+       if [ ! -f ./00_provider.tf ]
        then
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
        fi
+       ls -lh
        cat ./00_provider.tf
+       exit 1
        
 
     - name: Load Terraform to operate
@@ -179,7 +181,7 @@ jobs:
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
-       if [ ! -f ./00_provider.tf]
+       if [ ! -f ./00_provider.tf ]
        then
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
