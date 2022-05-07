@@ -1,10 +1,20 @@
-cache_subnet_name = "template-vpc-elscache-subnet-group"
-rds_subnet_name = "template-vpc-rds-subnet-group"
-route53_zoneid = "Z0521076LO7VPQ7DWT46"
-subnet_private_1a = "subnet-08e2fd11dfd345098"
-subnet_private_1b = "subnet-0d0db4f7df4707f31"
-subnet_private_1c = "subnet-0d0b41a80a6ee7d52"
-subnet_public_1a = "subnet-0b4109461a9ceca3b"
-subnet_public_1b = "subnet-06f530775185ac728"
-subnet_public_1c = "subnet-022e5d2cc6d632d25"
-vpc_id = "vpc-00eace7550e471397"
+[command]/home/runner/work/_temp/38c4f9c7-52ab-45fe-9a5b-8bbae754a4fd/terraform-bin output
+[33m╷[0m[0m
+[33m│[0m [0m[1m[33mWarning: [0m[0m[1mNo outputs found[0m
+[33m│[0m [0m
+[33m│[0m [0m[0mThe state file either has no outputs defined, or all the defined outputs
+[33m│[0m [0mare empty. Please define an output in your configuration with the `output`
+[33m│[0m [0mkeyword and run `terraform refresh` for it to become available. If you are
+[33m│[0m [0musing interpolation, please verify the interpolated value is not empty. You
+[33m│[0m [0mcan use the `terraform console` command to assist.
+[33m╵[0m[0m
+::debug::Terraform exited with code 0.
+::debug::stdout: [33m╷[0m[0m%0A[33m│[0m [0m[1m[33mWarning: [0m[0m[1mNo outputs found[0m%0A[33m│[0m [0m%0A[33m│[0m [0m[0mThe state file either has no outputs defined, or all the defined outputs%0A[33m│[0m [0mare empty. Please define an output in your configuration with the `output`%0A[33m│[0m [0mkeyword and run `terraform refresh` for it to become available. If you are%0A[33m│[0m [0musing interpolation, please verify the interpolated value is not empty. You%0A[33m│[0m [0mcan use the `terraform console` command to assist.%0A[33m╵[0m[0m%0A
+::debug::stderr: 
+::debug::exitcode: 0
+
+::set-output name=stdout::[33m╷[0m[0m%0A[33m│[0m [0m[1m[33mWarning: [0m[0m[1mNo outputs found[0m%0A[33m│[0m [0m%0A[33m│[0m [0m[0mThe state file either has no outputs defined, or all the defined outputs%0A[33m│[0m [0mare empty. Please define an output in your configuration with the `output`%0A[33m│[0m [0mkeyword and run `terraform refresh` for it to become available. If you are%0A[33m│[0m [0musing interpolation, please verify the interpolated value is not empty. You%0A[33m│[0m [0mcan use the `terraform console` command to assist.%0A[33m╵[0m[0m%0A
+
+::set-output name=stderr::
+
+::set-output name=exitcode::0
