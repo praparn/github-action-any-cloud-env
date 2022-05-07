@@ -101,10 +101,6 @@ jobs:
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
        fi
-       ls -lh
-       cat ./00_provider.tf
-       exit 1
-       
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
