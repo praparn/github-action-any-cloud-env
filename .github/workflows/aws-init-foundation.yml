@@ -123,7 +123,7 @@ jobs:
     - name: Terraform configuration step2
       id: plan1
       run: terraform plan -no-color -out=tfplan
-      continue-on-error: false
+      continue-on-error: true
 
     - name: Terraform create
       id: apply1
@@ -183,7 +183,7 @@ jobs:
        sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
        fi
 
-    - name: Check certificate and import to system
+    - name: Check certificate and generate certificate
       run: |
        if [ ! -f cert-template.pub ]
        then
@@ -191,12 +191,12 @@ jobs:
        echo "Warning !!! No public key found. System will help to auto-generate certificate for you. Anyway please copy your private key immediatly after this process complete for avoid let private key store on git repository !!!"
        ssh-keygen -t rsa -N '' -f ./cert-template
        publickey="$(cat ./cert-template.pub)"
-       export TF_VAR_public_key=$publickey
+       echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
 
        else
        echo "Start to import public certificate to sytem variable"
        publickey="$(cat ./cert-template.pub)"
-       export TF_VAR_public_key=$publickey
+       echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
 
        fi
 
@@ -221,7 +221,7 @@ jobs:
     - name: Terraform configuration step2
       id: plan2
       run: terraform plan -no-color -out=tfplan -input=false
-      continue-on-error: false
+      continue-on-error: true
 
     - name: Terraform create
       id: apply2
