@@ -94,12 +94,14 @@ jobs:
       # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
       run: |
-       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+       if [ ! -f ./00_provider.tf]
+       then
+       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
-       pwd
-       cat ./00_provider.tf
+       fi
+       
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -135,11 +137,14 @@ jobs:
       continue-on-error: false
 
       # CleanUp process
-    - name: CleanUp temporary file
+    - name: CleanUp temporary file & trim output
       run: | 
+        sed '/::/d' ../../99.Systemplate/system_variable.auto.tfvars > ../../99.Systemplate/system_variable.auto.tfvars.tmp && mv ../../99.Systemplate/system_variable.auto.tfvars.tmp ../../99.Systemplate/system_variable.auto.tfvars
+        sed '/output/d' ../../99.Systemplate/system_variable.auto.tfvars > ../../99.Systemplate/system_variable.auto.tfvars.tmp && mv ../../99.Systemplate/system_variable.auto.tfvars.tmp ../../99.Systemplate/system_variable.auto.tfvars
+        grep "\S" ../../99.Systemplate/system_variable.auto.tfvars > ../../99.Systemplate/system_variable.auto.tfvars.tmp && mv ../../99.Systemplate/system_variable.auto.tfvars.tmp ../../99.Systemplate/system_variable.auto.tfvars
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
-        rm ./00_provider.tf
+
 
     - uses: actions-js/push@master
       name: Commit and push result back
@@ -169,12 +174,33 @@ jobs:
     # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
       run: |
-       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
+       if [ ! -f ./00_provider.tf]
+       then
+       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
        sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
+       fi
+
+    - name: Check certificate and import to system
+      run: |
+       if [ ! -f cert-template.pub ]
+       then
+
+       echo "Warning !!! No public key found. System will help to auto-generate certificate for you. Anyway please copy your private key immediatly after this process complete for avoid let private key store on git repository !!!"
+       rm ./cert-template*
+       ssh-keygen -t rsa -N '' -f ./cert-template
+       publickey="$(cat ./cert-template.pub)"
+       export TF_VAR_public_key=$publickey
+
+       else
+       echo "Start to import public certificate to sytem variable"
+       publickey="$(cat ./cert-template.pub)"
+       export TF_VAR_public_key=$publickey
+
+       fi
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -188,7 +214,7 @@ jobs:
     
     - name: Terraform initialize
       id: init2
-      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }} -input=false
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
 
     - name: Terraform validation configuration step1
       id: validate2
@@ -211,7 +237,6 @@ jobs:
         rm ./global_variables.tf
         rm ./system_variable.auto.tfvars
         rm ./system_variables.tf
-        rm ./00_provider.tf
 
     - uses: actions-js/push@master
       name: Commit and push result back

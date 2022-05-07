@@ -26,11 +26,24 @@ else
 exit
 fi
 #Generate Certificate (Thos process should run only 1 time)
+
+if [ ! -f cert-template.pub ]
+then
+echo "Warning !!! No public key found. System will help to auto-generate certificate for you. Anyway please copy your private key immediatly after this process complete for avoid let private key store on git repository !!!"
 rm ./cert-template*
 ssh-keygen -t rsa -N '' -f ./cert-template
-cp ./cert-template ./cert-template.bak
-cp ./cert-template.pub ./cert-template.pub.bak
-ssh-keygen -p -N "" -m pem -f ./cert-template  #convert to RSA format
+publickey="$(cat ./cert-template.pub)"
+export TF_VAR_public_key=$publickey
+else
+echo "Start to import public certificate to sytem variable"
+publickey="$(cat ./cert-template.pub)"
+export TF_VAR_public_key=$publickey
+fi
+
+
+#cp ./cert-template ./cert-template.bak
+#cp ./cert-template.pub ./cert-template.pub.bak
+#ssh-keygen -p -N "" -m pem -f ./cert-template  #convert to RSA format
 publickey="$(cat ./cert-template.pub)"
 export TF_VAR_public_key=$publickey
 #Generate Certificate (Thos process should run only 1 time)
