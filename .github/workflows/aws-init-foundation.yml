@@ -112,8 +112,7 @@ jobs:
     
     - name: Terraform initialize
       id: init1
-      run: terraform init -input=false
-      #run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -input=false
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
 
     - name: Terraform validation configuration step1
       id: validate1
@@ -188,7 +187,7 @@ jobs:
     
     - name: Terraform initialize
       id: init2
-      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -input=false
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }} -input=false
 
     - name: Terraform validation configuration step1
       id: validate2
