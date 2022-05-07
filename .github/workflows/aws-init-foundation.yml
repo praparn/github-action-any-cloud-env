@@ -64,6 +64,7 @@ jobs:
         cp ./99.Systemplate/00_provider.tftemplate ./99.Systemplate/00_provider.tf
         sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
         sed -i -e "s/<region>/${{ secrets.AWS_REGION }}/g" ./99.Systemplate/00_provider.tf
+        cat ./99.Systemplate/00_provider.tf
 
     - uses: actions-js/push@master
       name: Commit and push result back
