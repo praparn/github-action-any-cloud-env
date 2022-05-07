@@ -31,9 +31,9 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
-          echo "::set-env name=s3exits::no"
+          echo "s3exits=no" >> $GITHUB_ENV
         elseif
-          echo "::set-env name=s3exits::yes"
+          echo "s3exits=yes" >> $GITHUB_ENV
         fi
 
   create-foundation1:
@@ -59,6 +59,7 @@ jobs:
       run: |
         # Clone template file and preparation
         if [[ ${{ env.s3exits }} == *"no"* ]]; then
+        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
         exit 1
         fi
         cp ./99.Systemplate/00_provider.tftemplate ./99.Systemplate/00_provider.tf
@@ -123,7 +124,7 @@ jobs:
     - name: Terraform configuration step2
       id: plan1
       run: terraform plan -no-color -out=tfplan
-      continue-on-error: true
+      continue-on-error: false
 
     - name: Terraform create
       id: apply1
@@ -221,7 +222,7 @@ jobs:
     - name: Terraform configuration step2
       id: plan2
       run: terraform plan -no-color -out=tfplan -input=false
-      continue-on-error: true
+      continue-on-error: false
 
     - name: Terraform create
       id: apply2

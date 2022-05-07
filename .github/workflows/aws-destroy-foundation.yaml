@@ -2,24 +2,46 @@ name: 'AKS destroy cluster'
 on:
   push:
     tags:
-      - 'aks-cluster-destroy*'
+      - 'aws-destroy-foundation*'
   pull_request:
     tags:
-      - 'aks-cluster-destroy*'
+      - 'aws-destroy-foundation*'
+env:
+  s3exits: 'yes'
 
 jobs:
+  check-s3-bucket:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    steps:
+    # Configure AWS credential with region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Verify S3 bucket for housing state file
+    - name: Verify S3 bucket for housing state file
+      run: |
+        if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
+        then
+          echo "::set-env name=s3exits::no"
+        elseif
+          echo "::set-env name=s3exits::yes"
+        fi
   destroy-cluster:
     runs-on: ubuntu-latest
     env:
         working-directory: ./azure-aks/
-        TF_VAR_ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        TF_VAR_ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        TF_VAR_ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        TF_VAR_ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+        TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+        TF_VAR_region: ${{ secrets.AWS_REGION }}
 
     defaults:
       run:

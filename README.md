@@ -174,7 +174,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    ssh-keygen -t rsa -N '' -f ~/cert-template 
    ```
 
-3. Copy public key (cert-template.pub) to path "1.Environment/02_InitialParameter"
+3. Copy public key (cert-template.pub) to path "1.Environment/02_InitialParameter" (*Remark: If you not create the cert to folder. System will automatic generate by itself. Please copy private key back to your own as security concern)
    ```sh
    cp ~/cert-template.pub ./github-action-any-cloud-env/aws/1.Environment/02_InitialParameter
    ```
