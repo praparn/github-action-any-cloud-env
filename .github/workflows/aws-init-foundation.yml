@@ -97,6 +97,8 @@ jobs:
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
+       pwd
+       cat ./00_provider.tf
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -110,7 +112,8 @@ jobs:
     
     - name: Terraform initialize
       id: init1
-      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -input=false
+      run: terraform init -input=false
+      #run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -input=false
 
     - name: Terraform validation configuration step1
       id: validate1
@@ -119,17 +122,17 @@ jobs:
     - name: Terraform configuration step2
       id: plan1
       run: terraform plan -no-color -out=tfplan
-      continue-on-error: true
+      continue-on-error: false
 
     - name: Terraform create
       id: apply1
       run: terraform apply -input=false tfplan
-      continue-on-error: true
+      continue-on-error: false
 
     - name: Terraform export output
       id: output1
       run: terraform output > ../../99.Systemplate/system_variable.auto.tfvars
-      continue-on-error: true
+      continue-on-error: false
 
       # CleanUp process
     - name: CleanUp temporary file
@@ -194,12 +197,12 @@ jobs:
     - name: Terraform configuration step2
       id: plan2
       run: terraform plan -no-color -out=tfplan -input=false
-      continue-on-error: true
+      continue-on-error: false
 
     - name: Terraform create
       id: apply2
       run: terraform apply -input=false tfplan
-      continue-on-error: true
+      continue-on-error: false
 
       # CleanUp process
     - name: CleanUp temporary file

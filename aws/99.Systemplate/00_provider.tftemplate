@@ -5,13 +5,7 @@ terraform {
     bucket = "<bucket>"
     key    = "<keyname>"
     region = "<region>"
-  }
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/aws"
-      version = "4.12.1"
-    }
+    encrypt = true
   }
 }
 

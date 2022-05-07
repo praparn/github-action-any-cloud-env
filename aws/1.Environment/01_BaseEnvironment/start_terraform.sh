@@ -27,6 +27,8 @@ fi
 echo "====================================Finished to Set Credential=========================================="
 cp ../../99.Systemplate/global_variable.auto.tfvars ./
 cp ../../99.Systemplate/global_variables.tf ./
+cp ../../99.Systemplate/00_provider.tf ./
+sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
 echo "=================================Start Execution Process Now !!!========================================"
 ./99_automate.sh >> $filename
 rm ./global_variable.auto.tfvars

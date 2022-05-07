@@ -6,13 +6,6 @@ terraform {
     key    = "<keyname>"
     region = "ap-southeast-1"
   }
-
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/aws"
-      version = "4.12.1"
-    }
-  }
 }
 
 provider "aws" {
