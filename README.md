@@ -213,7 +213,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
 
 ### Create Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
 
-1. Select template of element from sub folder under <element> and create new folder name (Ex: cp 2.Instance/01_Standard_Linux_Public 2.Instance/TestLinux )
+1. Select template of element from sub folder under <element> and create new folder name (Ex: cp 2.Instance/01_Standard_Linux_Public 2.Instance/TestLinux) *Remark: Foldername cannot consist "-" in name
    ```sh
    cp <element>/<template folder> <element folder>/<folder name>  
    ```
@@ -227,11 +227,11 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    ```sh
    git pull
    git tag #check tag duplicate
-   echo "aws-init-element-<element>-yyyymmddhhmmss" > ./result/result-aws
+   echo "aws-init-element-yyyymmddhhmmss" > ./result/result-aws
    git add -A
-   git commit -m "<folder name>-yyyymmddhhmmss"
-   git tag aws-init-element-<element>-yyyymmddhhmmss -m "aws-init-element-<element>-yyyymmddhhmmss"
-   git push --atomic origin <branch name> aws-init-element-<element>-yyyymmddhhmmss
+   git commit -m "<element>-<folder name>-yyyymmddhhmmss"
+   git tag aws-init-element-yyyymmddhhmmss -m "aws-init-element-yyyymmddhhmmss"
+   git push --atomic origin <branch name> aws-init-element-yyyymmddhhmmss
    ```
 
 4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.png" alt="githubaction" width="800" height="500">

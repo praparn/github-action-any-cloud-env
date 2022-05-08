@@ -58,58 +58,61 @@ jobs:
     - name: Extract Element and Folder Name
       run: |
         # Extrace tag&commit name
-        tag_name=${GITHUB_REF#refs/*/}
         commit_name=${{ github.event.head_commit.message }}
 
         # Switch case for tag element
-        case $tag_name in
+        case $commit_name in
         *2.Instance*)
           element_name=2.Instance
+          echo "ELEMENT_NAME=2.Instance" >> $GITHUB_ENV
           ;;
 
         *3.Database*)
           element_name=3.Database
+          echo "ELEMENT_NAME=3.Database" >> $GITHUB_ENV
           ;;
 
         *4.Cache*)
           element_name=4.Cache
+          echo "ELEMENT_NAME=4.Cache" >> $GITHUB_ENV
           ;;
 
         *5.Bucket*)
           element_name=5.Bucket
+          echo "ELEMENT_NAME=5.Bucket" >> $GITHUB_ENV
           ;;
 
         *6.Queue*)
           element_name=6.Queue
+          echo "ELEMENT_NAME=6.Queue" >> $GITHUB_ENV
           ;;
 
         *7.Other*)
           element_name=7.Other
+          echo "ELEMENT_NAME=7.Other" >> $GITHUB_ENV
           ;;
 
         *)
-          echo "Error validation!!!. The element name define on tag is not on allow value (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other). Process Abort"
+          echo "Error validation!!!. The element name define on commit is not on allow value (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other). Process Abort"
           exit 1
           ;;
 
         esac
-        echo "Final Element Name: "$element_name
-        echo "ELEMENT_NAME=$(echo $element_name)" >> $GITHUB_ENV
+        echo "ENV Element Name: "$ELEMENT_NAME
 
         # Extract folder name from commit
-        folder_name=$(echo $commit_name | cut -f1 -d"-")
-        echo "FOLDER_NAME=$(echo $folder_name)" >> $GITHUB_ENV
-        echo "Commit Name: "$commit_name
+        folder_name=$(echo $commit_name | cut -f2 -d"-")
+        echo "FOLDER_NAME=$(echo $commit_name | cut -f2 -d'-')" >> $GITHUB_ENV
         echo "Final Folder Name: "$folder_name
         echo "ENV Folder Name: "$FOLDER_NAME
         echo "Folder: >>"./$ELEMENT_NAME/$FOLDER_NAME"<<"
 
-        if [ ! -d ./$ELEMENT_NAME/$FOLDER_NAME ]
+        if [ ! -d ./$element_name/$folder_name ]
         then
-        echo "Error validation!!!. Your folder and element path is not exist (./$ELEMENT_NAME/$FOLDER_NAME). Process Abort"
+        echo "Error validation!!!. Your folder and element path is not exist (./$element_name/$folder_name). Process Abort"
         exit 1
         else
-        echo "working-directory=./aws/$ELEMENT_NAME/$FOLDER_NAME/" >> $GITHUB_ENV
+        echo "working-directory=./aws/$element_name/$folder_name" >> $GITHUB_ENV
         echo "WorkDirectory :" $working-directory
         fi
 
