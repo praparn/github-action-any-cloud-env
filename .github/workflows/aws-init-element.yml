@@ -14,8 +14,6 @@ jobs:
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
-      ELEMENT_NAME: "null"
-      FOLDER_NAME: "null"
 
     steps:
     # Configure AWS credential with region
@@ -45,6 +43,8 @@ jobs:
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
+      ELEMENT_NAME: "null"
+      FOLDER_NAME: "null"
 
     defaults:
       run:
