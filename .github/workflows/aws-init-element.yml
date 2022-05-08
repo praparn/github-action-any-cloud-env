@@ -65,27 +65,27 @@ jobs:
 
         # Switch case for tag element
         case $tag_name in
-        *"2.Instance"*)
+        *2.Instance*)
           element_name=2.Instance
           ;;
 
-        *"3.Database"*)
+        *3.Database*)
           element_name=3.Database
           ;;
 
-        *"4.Cache"*)
+        *4.Cache*)
           element_name=4.Cache
           ;;
 
-        *"5.Bucket"*)
+        *5.Bucket*)
           element_name=5.Bucket
           ;;
 
-        *"6.Queue"*)
+        *6.Queue*)
           element_name=6.Queue
           ;;
 
-        *"7.Other*)
+        *7.Other*)
           element_name=7.Other
           ;;
 
@@ -93,6 +93,7 @@ jobs:
           echo "Error validation!!!. The element name define on tag is not on allow value (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other). Process Abort"
           exit 1
           ;;
+          
         esac
         echo "Final Element Name: "$element_name
         echo "ELEMENT_NAME=$(echo $element_name)" >> $GITHUB_ENV
