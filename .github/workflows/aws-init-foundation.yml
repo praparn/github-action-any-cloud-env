@@ -62,7 +62,7 @@ jobs:
         sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
         sed -i -e "s/<region>/${{ secrets.AWS_REGION }}/g" ./99.Systemplate/00_provider.tf
         cat ./99.Systemplate/00_provider.tf
-        
+
 
   create-foundation2:
     needs: [create-foundation1]
@@ -240,7 +240,9 @@ jobs:
 
       # CleanUp process
     - name: CleanUp temporary file
-      run: | 
+      run: |
+        pwd
+        ls -lh
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
         rm ./system_variable.auto.tfvars
