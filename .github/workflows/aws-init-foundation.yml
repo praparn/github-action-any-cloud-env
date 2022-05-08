@@ -92,23 +92,25 @@ jobs:
     - uses: actions/checkout@master
       name: Git checkout code
 
-      # Copy global configuration to target folder and configure
-    - name: Copy global configuration and Configure TFState
-      run: |
-       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
-       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
-       if [ ! -f ./00_provider.tf ]
-       then
-       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
-       sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
-       fi
-
     - name: Get TimeStamp
       id: time
       uses: nanzm/get-time-action@v1.1
       with:
         timeZone: 7
         format: 'YYYY-MM-DD-HH-mm-ss'
+
+      # Copy global configuration to target folder and configure
+    - name: Copy global configuration and Configure TFState
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
+      run: |
+       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+       if [ ! -f ./00_provider.tf ]
+       then
+       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
+       sed -i -e "s/<keyname>/01_BaseEnvironment_$TIME.tfstate/g" ./00_provider.tf
+       fi
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -182,6 +184,8 @@ jobs:
 
     # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
       run: |
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
@@ -190,7 +194,7 @@ jobs:
        if [ ! -f ./00_provider.tf ]
        then
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
-       sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
+       sed -i -e "s/<keyname>/02_InitialParameter_$TIME.tfstate/g" ./00_provider.tf
        fi
 
     - name: Check certificate and generate certificate
