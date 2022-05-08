@@ -104,7 +104,7 @@ jobs:
         echo "Commit Name: "$commit_name
         echo "Final Folder Name: "$folder_name
         echo "ENV Folder Name: "${{ env.FOLDER_NAME }}
-        echo "Folder: >>"./${{ env.ELEMENT_NAME }}/${{ env.ELEMENT_NAME }"<<"
+        echo "Folder: >>"./${{ env.ELEMENT_NAME }}/${{ env.ELEMENT_NAME }}"<<"
 
         if [ ! -d ./${{ env.ELEMENT_NAME }}/${{ env.ELEMENT_NAME }} ]
         then
