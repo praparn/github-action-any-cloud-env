@@ -109,7 +109,7 @@ jobs:
        if [ ! -f ./00_provider.tf ]
        then
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
-       sed -i -e "s/<keyname>/01_BaseEnvironment_$TIME.tfstate/g" ./00_provider.tf
+       sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
        fi
 
     - name: Load Terraform to operate
@@ -194,7 +194,7 @@ jobs:
        if [ ! -f ./00_provider.tf ]
        then
        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
-       sed -i -e "s/<keyname>/02_InitialParameter_$TIME.tfstate/g" ./00_provider.tf
+       sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
        fi
 
     - name: Check certificate and generate certificate
