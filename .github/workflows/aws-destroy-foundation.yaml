@@ -6,8 +6,6 @@ on:
   pull_request:
     tags:
       - 'aws-destroy-foundation*'
-env:
-  s3exits: 'yes'
 
 jobs:
   check-s3-bucket:
@@ -31,9 +29,10 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
-          echo "s3exits=no" >> $GITHUB_ENV
+          echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
+          exit 1
         elseif
-          echo "s3exits=yes" >> $GITHUB_ENV
+          echo "TFState location is work properly";
         fi
 
   destroy-foundation1:
@@ -57,10 +56,6 @@ jobs:
     # Copy global configuration to target folder and configure
     - name: Copy global configuration, Configure TFState and Update public_key
       run: |
-        if [[ ${{ env.s3exits }} == *"no"* ]]; then
-        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
-        exit 1
-        fi
         cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
         cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
         cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
