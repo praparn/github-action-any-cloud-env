@@ -54,6 +54,7 @@ jobs:
 
       # Extract Element and Folder Name
     - name: Extract Element and Folder Name
+      id: setwrkdir
       run: |
         # Extrace tag&commit name
         commit_name=${{ github.event.head_commit.message }}
@@ -101,15 +102,13 @@ jobs:
         echo "Error validation!!!. Your folder and element path is not exist (./$element_name/$folder_name). Process Abort"
         exit 1
         else
-        echo "working-directory=./aws/$element_name/$folder_name" >> $GITHUB_ENV
-        echo "WorkDirectory :" ${{env.working-directory}}
+        # Setup output for element and folder
+        echo "::set-output name=element_name::$element_name"
+        echo "::set-output name=folder_name::$folder_name"
+        echo "::set-output name=working_directory::./aws/$element_name/$folder_name"
+        echo "Export working directory: "./aws/$element_name/$folder_name
         fi
 
-        pwd
-        ls -lh
-
-        echo "Brake Debug"
-        exit 1
 
     - name: Get Time
       id: time
@@ -120,18 +119,23 @@ jobs:
 
     # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
-       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
-       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
-       cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
-       cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
-       if [ ! -f ./00_provider.tf ]
-       then
-       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
-       sed -i -e "s/<keyname>/$element_name-$folder_name.tfstate-$TIME/g" ./00_provider.tf
-       fi
+        pwd
+        ls -lh
+        echo "Brake Debug"
+        exit 1
+        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
+        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
+        if [ ! -f ./00_provider.tf ]
+        then
+        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
+        sed -i -e "s/<keyname>/$element_name-$folder_name.tfstate-$TIME/g" ./00_provider.tf
+        fi
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
