@@ -100,9 +100,10 @@ jobs:
 
         # Extract folder name from commit
         folder_name=$commit_name | cut -f1 -d"-"
+        echo "FOLDER_NAME=$commit_name | cut -f1 -d"-"" >> $GITHUB_ENV
+
         echo "Commit Name: "$commit_name
-        echo "Final Folder Name: "$folder_name
-        echo "FOLDER_NAME=$(echo $folder_name)" >> $GITHUB_ENV
+        echo "Final Folder Name: "{{ env.FOLDER_NAME }}
 
         if [ ! -d ./$element_name/$folder_name ]
         then
