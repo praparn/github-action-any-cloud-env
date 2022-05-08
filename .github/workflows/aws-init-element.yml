@@ -93,7 +93,7 @@ jobs:
           echo "Error validation!!!. The element name define on tag is not on allow value (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other). Process Abort"
           exit 1
           ;;
-          
+
         esac
         echo "Final Element Name: "$element_name
         echo "ELEMENT_NAME=$(echo $element_name)" >> $GITHUB_ENV
@@ -108,7 +108,7 @@ jobs:
         echo "Error validation!!!. Your folder and element path is not exist (./$element_name/$folder_name). Process Abort"
         exit 1
         elseif
-        echo "working-directory=./aws/{{ env.ELEMENT_NAME }}/{{ env.FOLDER_NAME }}/ >> $GITHUB_ENV
+        echo "working-directory=./aws/{{ env.ELEMENT_NAME }}/{{ env.FOLDER_NAME }}/" >> $GITHUB_ENV
         echo "WorkDirectory :" {{ env.working-directory }}
         fi
         echo "Brake Debug"
