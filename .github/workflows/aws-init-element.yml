@@ -102,7 +102,7 @@ jobs:
         exit 1
         else
         echo "working-directory=./aws/$element_name/$folder_name" >> $GITHUB_ENV
-        echo "WorkDirectory :" $working-directory
+        echo "WorkDirectory :" ${{env.working-directory}}
         fi
 
         pwd
