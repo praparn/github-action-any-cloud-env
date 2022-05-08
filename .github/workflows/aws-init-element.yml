@@ -99,11 +99,10 @@ jobs:
         echo "ELEMENT_NAME=$(echo $element_name)" >> $GITHUB_ENV
 
         # Extract folder name from commit
-        folder_name=$commit_name | cut -f1 -d"-"
-        echo "FOLDER_NAME=$commit_name | cut -f1 -d"-"" >> $GITHUB_ENV
-
+        folder_name=$(echo $commit_name | cut -f1 -d"-")
+        echo "FOLDER_NAME=$folder_name >> $GITHUB_ENV
         echo "Commit Name: "$commit_name
-        echo "Final Folder Name: "${{ env.FOLDER_NAME }}
+        echo "Final Folder Name: "$folder_name
 
         if [ ! -d ./$element_name/$folder_name ]
         then
@@ -113,6 +112,7 @@ jobs:
         echo "working-directory=./aws/{{ env.ELEMENT_NAME }}/{{ env.FOLDER_NAME }}/" >> $GITHUB_ENV
         echo "WorkDirectory :" {{ env.working-directory }}
         fi
+
         echo "Brake Debug"
         exit 1
 
