@@ -182,6 +182,9 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
+       git branch main
+       git checkout master 
+       git merge main 
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
