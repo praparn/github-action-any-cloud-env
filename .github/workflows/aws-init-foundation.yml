@@ -171,13 +171,14 @@ jobs:
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
+      with:
+        fetch-depth: '0'
 
     # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
-       git pull
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
