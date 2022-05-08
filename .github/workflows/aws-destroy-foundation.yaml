@@ -191,8 +191,28 @@ jobs:
        rm ./00_provider.tf
        fi
 
+      # Last checkout before pull
+    - uses: actions/checkout@master
+      name: Git update result from previous step
+
     - uses: actions-js/push@master
       name: Commit and push result back
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         message: "Commit for update result create environment"
+
+  delete-s3-statefile:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    steps:
+    # Configure AWS credential with region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: ${{ secrets.AWS_REGION }}

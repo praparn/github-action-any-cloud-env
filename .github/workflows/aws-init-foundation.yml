@@ -252,6 +252,10 @@ jobs:
         rm ./system_variable.auto.tfvars
         rm ./system_variables.tf
 
+      # Last checkout before pull
+    - uses: actions/checkout@master
+      name: Git update result from previous step
+
     - uses: actions-js/push@master
       name: Commit and push result back
       with:
