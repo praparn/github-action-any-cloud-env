@@ -31,14 +31,16 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
-          echo "::set-env name=s3exits::no"
+          echo "s3exits=no" >> $GITHUB_ENV
         elseif
-          echo "::set-env name=s3exits::yes"
+          echo "s3exits=yes" >> $GITHUB_ENV
         fi
-  destroy-cluster:
+
+  destroy-foundation1:
+    needs: [check-s3-bucket]
     runs-on: ubuntu-latest
     env:
-        working-directory: ./azure-aks/
+        working-directory: ./aws/1.Environment/02_InitialParameter/
         TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
         TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
         TF_VAR_region: ${{ secrets.AWS_REGION }}
@@ -46,51 +48,120 @@ jobs:
     defaults:
       run:
         working-directory: ${{env.working-directory}}
+
     steps:
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
 
-      # Seed file for system configuration
-    - name: Setup system configruation
-      run: | 
-        # Sed to setup environment
-        sed -i -e "s/###resource_group###/${{ secrets.AZURE_RESOURCEGROUP }}/g" ./terraform.tfvars
-        sed -i -e "s/###storage_accname###/${{ secrets.AZURE_STORAGEACCOUNT }}/g" ./terraform.tfvars
-        sed -i -e "s/###cluster_name###/${{ secrets.AZURE_CLUSTERNAME }}/g" ./terraform.tfvars
-        sed -i -e "s/###resource_group###/${{ secrets.AZURE_RESOURCEGROUP }}/g" ./00_provider.tf
-        sed -i -e "s/###storage_accname###/${{ secrets.AZURE_STORAGEACCOUNT }}/g" ./00_provider.tf
-        sed -i -e "s/###cluster_name###/${{ secrets.AZURE_CLUSTERNAME }}/g" ./00_provider.tf
+    # Copy global configuration to target folder and configure
+    - name: Copy global configuration and Configure TFState
+      run: |
+       if [[ ${{ env.s3exits }} == *"no"* ]]; then
+        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
+        exit 1
+       fi
+       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+       cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
+       cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
+       if [ ! -f ./00_provider.tf ]
+       then
+       echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
+       exit 1
+       fi
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.1.8
-
-    - name: AKS readiness verify
-      id: fmt
-      run: terraform fmt -check
-      continue-on-error: true
     
-    - name: AKS initialize
-      id: init
-      run: terraform init -input=false
+    - name: Terraform initialize
+      id: init1
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
 
-    - name: AKS validation configuration step1
-      id: validate
+    - name: Terraform validation configuration step1
+      id: validate1
       run: terraform validate -no-color
 
-    - name: AKS destroy farm
-      id: destroy
+    - name: Terraform destroy element
+      id: destroy1
       run: terraform destroy --auto-approve
       continue-on-error: true
 
-    - name: Rollback all Propertie KUBECONFIG
-      run: | 
-        # Cleanup KUBECONFIG
-        echo " " > aks-config
-        cp "./00_provider-template.tftemplate" "./00_provider.tf"
-        cp "./terraform-template.tfvarstemplate" "./terraform.tfvars"
+    - name: CleanUp Process
+      run: |
+       rm ./global_variable.auto.tfvars
+       rm ./global_variables.tf
+       rm ./system_variable.auto.tfvars
+       rm ./system_variables.tf
+       if [ -f ./00_provider.tf ]
+       then
+       rm ./00_provider.tf
+       fi
+
+    - uses: actions-js/push@master
+      name: Commit and push result back
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        message: "Commit for update result create environment"
+
+
+  destroy-foundation2:
+    needs: [destroy-foundation1]
+    runs-on: ubuntu-latest
+    env:
+        working-directory: ./aws/1.Environment/01_BaseEnvironment/
+        TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+        TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+        TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+
+    steps:
+      # Checkout code
+    - uses: actions/checkout@master
+      name: Git checkout code
+
+    # Copy global configuration to target folder and configure
+    - name: Copy global configuration and Configure TFState
+      run: |
+       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+       if [ ! -f ./00_provider.tf ]
+       then
+       echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
+       exit 1
+       fi
+    
+    - name: Load Terraform to operate
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.8
+    
+    - name: Terraform initialize
+      id: init1
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
+
+    - name: Terraform validation configuration step1
+      id: validate1
+      run: terraform validate -no-color
+
+    - name: Terraform destroy element
+      id: destroy1
+      run: terraform destroy --auto-approve
+      continue-on-error: true
+
+    - name: CleanUp Process
+      run: |
+       rm ./global_variable.auto.tfvars
+       rm ./global_variables.tf
+       if [ -f ./00_provider.tf ]
+       then
+       rm ./00_provider.tf
+       fi
 
     - uses: actions-js/push@master
       name: Commit and push result back
