@@ -47,6 +47,7 @@ jobs:
     defaults:
       run:
         working-directory: ${{env.working-directory}}
+        
     steps:
       # Checkout code
     - uses: actions/checkout@master
@@ -123,10 +124,6 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
-        pwd
-        ls -lh
-        echo "Brake Debug"
-        exit 1
         cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
         cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
         cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
@@ -143,24 +140,29 @@ jobs:
         terraform_version: 1.1.9
 
     - name: Terraform readiness verify
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       id: fmt1
       run: terraform fmt -check
       continue-on-error: true
     
     - name: Terraform initialize
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       id: init1
       run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
 
     - name: Terraform validation configuration step1
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       id: validate1
       run: terraform validate -no-color
 
     - name: Terraform configuration step2
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       id: plan1
       run: terraform plan -no-color -out=tfplan -input=false
       continue-on-error: false
 
     - name: Terraform create
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       env:
         TIME: "${{ steps.time.outputs.time }}"
       id: apply1
@@ -169,6 +171,7 @@ jobs:
 
       # CleanUp process
     - name: CleanUp temporary file
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       run: |
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
@@ -179,4 +182,4 @@ jobs:
       name: Commit and push result back
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create-{{ env.ELEMENT_NAME }}-{{ env.FOLDER_NAME }}"
+        message: "Commit for update result create-${{ steps.setwrkdir.outputs.element_name }}-{{ steps.setwrkdir.outputs.folder_name }}"
