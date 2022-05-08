@@ -131,7 +131,7 @@ jobs:
         if [ ! -f ./00_provider.tf ]
         then
         cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
-        sed -i -e "s/<keyname>/$element_name-$folder_name.tfstate-$TIME/g" ./00_provider.tf
+        sed -i -e "s/<keyname>/$element_name-$folder_name-$TIME.tfstate/g" ./00_provider.tf
         fi
 
     - name: Load Terraform to operate
