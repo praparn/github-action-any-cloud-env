@@ -97,10 +97,7 @@ jobs:
        rm ./global_variables.tf
        rm ./system_variable.auto.tfvars
        rm ./system_variables.tf
-       if [ -f ./00_provider.tf ]
-       then
        rm ./00_provider.tf
-       fi
 
     - uses: actions-js/push@master
       name: Commit and push result back
@@ -164,10 +161,7 @@ jobs:
       run: |
        rm ./global_variable.auto.tfvars
        rm ./global_variables.tf
-       if [ -f ./00_provider.tf ]
-       then
        rm ./00_provider.tf
-       fi
 
       # Last checkout before pull
     - uses: actions/checkout@master
