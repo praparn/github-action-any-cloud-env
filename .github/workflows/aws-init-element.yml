@@ -166,8 +166,8 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       id: apply1
-      run: terraform apply -input=false tfplan > ./log/Initial-$TIME.log
-      continue-on-error: false
+      run: terraform apply -input=false tfplan
+      continue-on-error: true
 
       # CleanUp process
     - name: CleanUp temporary file
