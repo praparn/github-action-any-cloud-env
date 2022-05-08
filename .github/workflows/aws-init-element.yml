@@ -103,7 +103,7 @@ jobs:
         echo "FOLDER_NAME=$commit_name | cut -f1 -d"-"" >> $GITHUB_ENV
 
         echo "Commit Name: "$commit_name
-        echo "Final Folder Name: "{{ env.FOLDER_NAME }}
+        echo "Final Folder Name: "${{ env.FOLDER_NAME }}
 
         if [ ! -d ./$element_name/$folder_name ]
         then
