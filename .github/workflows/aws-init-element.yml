@@ -1,0 +1,180 @@
+name: 'AWS initial element'
+on:
+  push:
+    tags:
+      - 'aws-init-element*'
+  pull_request:
+    tags:
+      - 'aws-init-element*'
+
+env:
+  ELEMENT_NAME: ""
+  FOLDER_NAME: ""
+
+jobs:
+  check-s3-bucket:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    steps:
+    # Configure AWS credential with region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Verify S3 bucket for housing state file
+    - name: Verify S3 bucket for housing state file
+      run: |
+        if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
+        then
+          echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
+          exit 1
+        elseif
+          echo "TFState location is work properly";
+        fi
+
+  init-element:
+    runs-on: ubuntu-latest
+    needs: [check-s3-bucket]
+    env:
+      working-directory: ./aws/
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+    steps:
+      # Checkout code
+    - uses: actions/checkout@master
+      name: Git checkout code
+
+      # Extract Element and Folder Name
+    - name: Extract Element and Folder Name
+      run: |
+        # Extrace tag&commit name
+        tag_name=${GITHUB_REF#refs/*/}
+        commit_name=${{ github.event.head_commit.message }}
+
+        # Switch case for tag element
+        case $tag_name in
+        *"2.Instance"*)
+          element_name=2.Instance
+          ;;
+
+        *"3.Database"*)
+          element_name=3.Database
+          ;;
+
+        *"4.Cache"*)
+          element_name=4.Cache
+          ;;
+
+        *"5.Bucket"*)
+          element_name=5.Bucket
+          ;;
+
+        *"6.Queue"*)
+          element_name=6.Queue
+          ;;
+
+        *"7.Other*)
+          element_name=7.Other
+          ;;
+
+        *)
+          echo "Error validation!!!. The element name define on tag is not on allow value (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other). Process Abort"
+          exit 1
+          ;;
+        esac
+        echo "Final Element Name: "$element_name
+        echo "ELEMENT_NAME=$(echo $element_name)" >> $GITHUB_ENV
+
+        # Extract folder name from commit
+        folder_name=$commit_name | cut -f1 -d"-"
+        echo "Final Folder Name: "$folder_name
+        echo "FOLDER_NAME=$(echo $folder_name)" >> $GITHUB_ENV
+
+        if [ ! -d ./$element_name/$folder_name ]
+        then
+        echo "Error validation!!!. Your folder and element path is not exist (./$element_name/$folder_name). Process Abort"
+        exit 1
+        elseif
+        echo "working-directory=./aws/{{ env.ELEMENT_NAME }}/{{ env.FOLDER_NAME }}/ >> $GITHUB_ENV
+        echo "WorkDirectory :" {{ env.working-directory }}
+        fi
+        echo "Brake Debug"
+        exit 1
+
+    - name: Get Time
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      with:
+        timeZone: 7
+        format: 'YYYY-MM-DD-HH-mm-ss'
+
+    # Copy global configuration to target folder and configure
+    - name: Copy global configuration and Configure TFState
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
+      run: |
+       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+       cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
+       cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
+       if [ ! -f ./00_provider.tf ]
+       then
+       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
+       sed -i -e "s/<keyname>/$element_name-$folder_name.tfstate-$TIME/g" ./00_provider.tf
+       fi
+
+    - name: Load Terraform to operate
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.1.9
+
+    - name: Terraform readiness verify
+      id: fmt1
+      run: terraform fmt -check
+      continue-on-error: true
+    
+    - name: Terraform initialize
+      id: init1
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
+
+    - name: Terraform validation configuration step1
+      id: validate1
+      run: terraform validate -no-color
+
+    - name: Terraform configuration step2
+      id: plan1
+      run: terraform plan -no-color -out=tfplan -input=false
+      continue-on-error: false
+
+    - name: Terraform create
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
+      id: apply1
+      run: terraform apply -input=false tfplan > ./log/Initial-$TIME.log
+      continue-on-error: false
+
+      # CleanUp process
+    - name: CleanUp temporary file
+      run: |
+        rm ./global_variable.auto.tfvars
+        rm ./global_variables.tf
+        rm ./system_variable.auto.tfvars
+        rm ./system_variables.tf
+
+    - uses: actions-js/push@master
+      name: Commit and push result back
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        message: "Commit for update result create-{{ env.ELEMENT_NAME }}-{{ env.FOLDER_NAME }}"

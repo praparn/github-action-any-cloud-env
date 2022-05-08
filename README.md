@@ -208,12 +208,12 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-foundation-yyyymmddhhmmss
    ```
 
-8. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.jpg" alt="githubaction" width="800" height="400">
+8. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws5.png" alt="githubaction" width="800" height="250">
 
 
 ### Create Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
 
-1. Select template of element from sub folder under <element> and create new folder name
+1. Select template of element from sub folder under <element> and create new folder name (Ex: cp 2.Instance/01_Standard_Linux_Public 2.Instance/TestLinux )
    ```sh
    cp <element>/<template folder> <element folder>/<folder name>  
    ```
@@ -223,18 +223,18 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    vi <element>/<folder name>/terraform.tfvars
    ```
 
-3. Apply the change to create element by commit with message "<folder name>" and tag "aks-create-<element>-*"
+3. Apply the change to create element by commit with message "<folder name>" and tag "aks-init-element-<element>-*"
    ```sh
    git pull
    git tag #check tag duplicate
-   echo "aws-create-<element>-yyyymmddhhmmss" > ./result/result-aws
+   echo "aws-init-element-<element>-yyyymmddhhmmss" > ./result/result-aws
    git add -A
-   git commit -m "<folder name>-<your message>"
-   git tag aws-create-<element>-yyyymmddhhmmss -m "aws-create-<element>-yyyymmddhhmmss"
-   git push --atomic origin <branch name> aws-create-<element>-yyyymmddhhmmss
+   git commit -m "<folder name>-yyyymmddhhmmss"
+   git tag aws-init-element-<element>-yyyymmddhhmmss -m "aws-init-element-<element>-yyyymmddhhmmss"
+   git push --atomic origin <branch name> aws-init-element-<element>-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws4.jpg" alt="githubaction" width="800" height="500">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.png" alt="githubaction" width="800" height="500">
 
 
 ### Modify Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
@@ -297,7 +297,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-destroy-foundation-yyyymmddhhmmss
    ```
 
-2. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws6.jpg" alt="githubaction" width="800" height="400">
+2. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws6.png" alt="githubaction" width="800" height="250">
 
 3. Destory AWS environment by commit and tag "aws-destroy-env*" (This delete S3 bucket for housing terraform state file and rollback all element to default)
    ```sh
