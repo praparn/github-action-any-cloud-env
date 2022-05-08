@@ -8,7 +8,7 @@ on:
       - 'aws-init-element*'
 
 jobs:
-  check-s3-bucket:
+  check-environment-readiness:
     runs-on: ubuntu-latest
     env:
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
@@ -16,6 +16,10 @@ jobs:
       TF_VAR_region: ${{ secrets.AWS_REGION }}
 
     steps:
+    # Checkout code
+    - uses: actions/checkout@master
+      name: Git checkout code
+
     # Configure AWS credential with region
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -34,6 +38,18 @@ jobs:
         elseif
           echo "TFState location is work properly";
         fi
+
+    # Verify VPC for housing all element
+    #- name: Verify VPC for housing element
+    #  run: |
+    #    
+    #    if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
+    #    then
+    #      echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
+    #      exit 1
+    #    elseif
+    #      echo "TFState location is work properly";
+    #    fi
 
   init-element:
     runs-on: ubuntu-latest
