@@ -54,8 +54,8 @@ jobs:
     - uses: actions/checkout@master
       name: Git checkout code
       with:
-        fetch-depth: '0'
-        
+        fetch-depth: 0
+
       # Prepare Configuration and Seed file 
     - name: Setup system configruation
       run: |
@@ -83,7 +83,7 @@ jobs:
     - uses: actions/checkout@master
       name: Git checkout code
       with:
-        fetch-depth: '0'
+        fetch-depth: 0
 
     - name: Get TimeStamp
       id: time
@@ -175,7 +175,7 @@ jobs:
     - uses: actions/checkout@master
       name: Git checkout code
       with:
-        fetch-depth: '0'
+        fetch-depth: 0
 
     # Copy global configuration to target folder and configure
     - name: Copy global configuration and Configure TFState
