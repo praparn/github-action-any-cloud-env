@@ -93,6 +93,10 @@ jobs:
       id: validate1
       run: terraform validate -no-color
 
+    - name: Terraform destroy plan
+      id: validate2
+      run: terraform plan -destroy
+
     - name: Terraform destroy element
       id: destroy1
       env:
@@ -173,6 +177,8 @@ jobs:
 
     - name: Terraform destroy element
       id: destroy1
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
       run: terraform destroy --auto-approve > ./log/Result_$TIME.log
       continue-on-error: true
 

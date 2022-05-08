@@ -103,6 +103,13 @@ jobs:
        sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
        fi
 
+    - name: Get TimeStamp
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      with:
+        timeZone: 7
+        format: 'YYYY-MM-DD-HH-mm-ss'
+
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -128,7 +135,9 @@ jobs:
 
     - name: Terraform create
       id: apply1
-      run: terraform apply -input=false tfplan
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
+      run: terraform apply -input=false tfplan > ./log/Result_$TIME.log
       continue-on-error: false
 
     - name: Terraform export output
@@ -188,18 +197,22 @@ jobs:
       run: |
        if [ ! -f cert-template.pub ]
        then
-
        echo "Warning !!! No public key found. System will help to auto-generate certificate for you. Anyway please copy your private key immediatly after this process complete for avoid let private key store on git repository !!!"
        ssh-keygen -t rsa -N '' -f ./cert-template
        publickey="$(cat ./cert-template.pub)"
        echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
-
        else
        echo "Start to import public certificate to sytem variable"
        publickey="$(cat ./cert-template.pub)"
        echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
-
        fi
+
+    - name: Get TimeStamp
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      with:
+        timeZone: 7
+        format: 'YYYY-MM-DD-HH-mm-ss'
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -226,7 +239,9 @@ jobs:
 
     - name: Terraform create
       id: apply2
-      run: terraform apply -input=false tfplan
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
+      run: terraform apply -input=false tfplan > ./log/Result_$TIME.log
       continue-on-error: false
 
       # CleanUp process
