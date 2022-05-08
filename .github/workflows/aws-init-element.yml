@@ -100,19 +100,23 @@ jobs:
 
         # Extract folder name from commit
         folder_name=$(echo $commit_name | cut -f1 -d"-")
-        echo "FOLDER_NAME=$(echo folder_name)" >> $GITHUB_ENV
+        echo "FOLDER_NAME=$(echo $folder_name)" >> $GITHUB_ENV
         echo "Commit Name: "$commit_name
         echo "Final Folder Name: "$folder_name
-        echo "ENV Folder Name: "{{ env.FOLDER_NAME }}
+        echo "ENV Folder Name: "${{ env.FOLDER_NAME }}
+        echo "Folder: >>"./${{ env.ELEMENT_NAME }}/${{ env.ELEMENT_NAME }"<<"
 
-        if [ ! -d ./$element_name/$folder_name ]
+        if [ ! -d ./${{ env.ELEMENT_NAME }}/${{ env.ELEMENT_NAME }} ]
         then
         echo "Error validation!!!. Your folder and element path is not exist (./$element_name/$folder_name). Process Abort"
         exit 1
-        elseif
-        echo "working-directory=./aws/{{ env.ELEMENT_NAME }}/{{ env.FOLDER_NAME }}/" >> $GITHUB_ENV
-        echo "WorkDirectory :" {{ env.working-directory }}
+        else
+        echo "working-directory=./aws/${{ env.ELEMENT_NAME }}/${{ env.ELEMENT_NAME }}${{ env.ELEMENT_NAME }}/" >> $GITHUB_ENV
+        echo "WorkDirectory :" ${{ env.working-directory }}
         fi
+
+        pwd
+        ls -lh
 
         echo "Brake Debug"
         exit 1
