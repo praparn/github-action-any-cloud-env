@@ -43,8 +43,6 @@ jobs:
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
-      ELEMENT_NAME: "null"
-      FOLDER_NAME: "null"
 
     defaults:
       run:
@@ -64,32 +62,26 @@ jobs:
         case $commit_name in
         *2.Instance*)
           element_name=2.Instance
-          echo "ELEMENT_NAME=2.Instance" >> $GITHUB_ENV
           ;;
 
         *3.Database*)
           element_name=3.Database
-          echo "ELEMENT_NAME=3.Database" >> $GITHUB_ENV
           ;;
 
         *4.Cache*)
           element_name=4.Cache
-          echo "ELEMENT_NAME=4.Cache" >> $GITHUB_ENV
           ;;
 
         *5.Bucket*)
           element_name=5.Bucket
-          echo "ELEMENT_NAME=5.Bucket" >> $GITHUB_ENV
           ;;
 
         *6.Queue*)
           element_name=6.Queue
-          echo "ELEMENT_NAME=6.Queue" >> $GITHUB_ENV
           ;;
 
         *7.Other*)
           element_name=7.Other
-          echo "ELEMENT_NAME=7.Other" >> $GITHUB_ENV
           ;;
 
         *)
@@ -98,14 +90,11 @@ jobs:
           ;;
 
         esac
-        echo "ENV Element Name: "$ELEMENT_NAME
+        echo "Element Name: "$element_name
 
         # Extract folder name from commit
         folder_name=$(echo $commit_name | cut -f2 -d"-")
-        echo "FOLDER_NAME=$(echo $commit_name | cut -f2 -d'-')" >> $GITHUB_ENV
         echo "Final Folder Name: "$folder_name
-        echo "ENV Folder Name: "$FOLDER_NAME
-        echo "Folder: >>"./$ELEMENT_NAME/$FOLDER_NAME"<<"
 
         if [ ! -d ./$element_name/$folder_name ]
         then
