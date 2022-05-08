@@ -59,7 +59,7 @@ jobs:
       run: |
         # Clone template file and preparation
         if [[ ${{ env.s3exits }} == *"no"* ]]; then
-        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
+        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
         exit 1
         fi
         cp ./99.Systemplate/00_provider.tftemplate ./99.Systemplate/00_provider.tf
