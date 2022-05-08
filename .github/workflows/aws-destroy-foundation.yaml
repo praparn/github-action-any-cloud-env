@@ -61,8 +61,6 @@ jobs:
         cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
         cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
         cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
-        ls -lh
-        pwd
         if [ ! -f ./00_provider.tf ]
         then
         echo "Error !!!. TFState file is unavaliable !!!. Please check file of statefile before continute";
