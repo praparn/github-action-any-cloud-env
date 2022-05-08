@@ -108,7 +108,6 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         message: "Commit for update result destroy 02_InitialParameter"
 
-
   destroy-foundation2:
     needs: [destroy-foundation1]
     runs-on: ubuntu-latest
