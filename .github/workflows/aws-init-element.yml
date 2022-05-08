@@ -7,10 +7,6 @@ on:
     tags:
       - 'aws-init-element*'
 
-env:
-  ELEMENT_NAME: ""
-  FOLDER_NAME: ""
-
 jobs:
   check-s3-bucket:
     runs-on: ubuntu-latest
@@ -18,6 +14,8 @@ jobs:
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
+      ELEMENT_NAME: "null"
+      FOLDER_NAME: "null"
 
     steps:
     # Configure AWS credential with region
