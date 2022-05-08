@@ -177,6 +177,7 @@ jobs:
       env:
         TIME: "${{ steps.time.outputs.time }}"
       run: |
+       git pull
        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
@@ -241,16 +242,10 @@ jobs:
       # CleanUp process
     - name: CleanUp temporary file
       run: |
-        pwd
-        ls -lh
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
         rm ./system_variable.auto.tfvars
         rm ./system_variables.tf
-
-      # Last checkout before pull
-    - uses: actions/checkout@master
-      name: Git update result from previous step
 
     - uses: actions-js/push@master
       name: Commit and push result back
