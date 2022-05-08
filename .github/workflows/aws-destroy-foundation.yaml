@@ -57,7 +57,7 @@ jobs:
     # Copy global configuration to target folder and configure
     - name: Copy global configuration, Configure TFState and Update public_key
       run: |
-       if [[ ${{ env.s3exits }} == *"no"* ]]; then
+       if [[ "${{ env.s3exits }}" == *"no"* ]]; then
         echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
         exit 1
        fi
@@ -200,19 +200,3 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         message: "Commit for update result create environment"
-
-  delete-s3-statefile:
-    runs-on: ubuntu-latest
-    env:
-      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
-      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
-      TF_VAR_region: ${{ secrets.AWS_REGION }}
-
-    steps:
-    # Configure AWS credential with region
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
-        aws-region: ${{ secrets.AWS_REGION }}
