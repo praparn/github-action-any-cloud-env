@@ -180,6 +180,8 @@ jobs:
 
     - uses: actions-js/push@master
       name: Commit and push result back
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         message: "Commit for update result create-${{ steps.setwrkdir.outputs.element_name }}-{{ steps.setwrkdir.outputs.folder_name }}"
