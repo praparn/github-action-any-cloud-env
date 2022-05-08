@@ -6,8 +6,6 @@ on:
   pull_request:
     tags:
       - 'aws-init-foundation*'
-env:
-  s3exits: 'yes'
 
 jobs:
   check-s3-bucket:
@@ -31,10 +29,12 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
         then
-          echo "s3exits=no" >> $GITHUB_ENV
+          echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
+          exit 1
         elseif
-          echo "s3exits=yes" >> $GITHUB_ENV
+          echo "TFState location is work properly";
         fi
+
 
   create-foundation1:
     needs: [check-s3-bucket]
@@ -58,21 +58,11 @@ jobs:
     - name: Setup system configruation
       run: |
         # Clone template file and preparation
-        if [[ ${{ env.s3exits }} == *"no"* ]]; then
-        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
-        exit 1
-        fi
         cp ./99.Systemplate/00_provider.tftemplate ./99.Systemplate/00_provider.tf
         sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
         sed -i -e "s/<region>/${{ secrets.AWS_REGION }}/g" ./99.Systemplate/00_provider.tf
         cat ./99.Systemplate/00_provider.tf
-
-    - uses: actions-js/push@master
-      name: Commit and push result back
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create-foundation1"
-
+        
 
   create-foundation2:
     needs: [create-foundation1]
@@ -139,7 +129,7 @@ jobs:
       id: apply1
       env:
         TIME: "${{ steps.time.outputs.time }}"
-      run: terraform apply -input=false tfplan > ./log/Result_$TIME.log
+      run: terraform apply -input=false tfplan > ./log/ResultInit_$TIME.log
       continue-on-error: false
 
     - name: Terraform export output
@@ -161,7 +151,7 @@ jobs:
       name: Commit and push result back
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create-foundation2"
+        message: "Commit for update result create-01_BaseEnvironment"
 
 
   create-foundation3:
@@ -245,7 +235,7 @@ jobs:
       id: apply2
       env:
         TIME: "${{ steps.time.outputs.time }}"
-      run: terraform apply -input=false tfplan > ./log/Result_$TIME.log
+      run: terraform apply -input=false tfplan > ./log/ResultInit_$TIME.log
       continue-on-error: false
 
       # CleanUp process
@@ -264,4 +254,4 @@ jobs:
       name: Commit and push result back
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create-foundation3"
+        message: "Commit for update result create-02_InitialParameter"

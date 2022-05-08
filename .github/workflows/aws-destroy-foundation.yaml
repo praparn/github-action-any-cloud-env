@@ -35,6 +35,7 @@ jobs:
           echo "TFState location is work properly";
         fi
 
+
   destroy-foundation1:
     needs: [check-s3-bucket]
     runs-on: ubuntu-latest
@@ -96,7 +97,7 @@ jobs:
       id: destroy1
       env:
           TIME: "${{ steps.time.outputs.time }}"
-      run: terraform destroy --auto-approve > ./log/Result_$TIME.log
+      run: terraform destroy --auto-approve > ./log/ResultDestroy_$TIME.log
       continue-on-error: true
 
     - name: CleanUp Process
@@ -114,7 +115,7 @@ jobs:
       name: Commit and push result back
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create environment"
+        message: "Commit for update result destroy 02_InitialParameter"
 
 
   destroy-foundation2:
@@ -159,22 +160,22 @@ jobs:
         terraform_version: 1.1.8
     
     - name: Terraform initialize
-      id: init1
+      id: init2
       run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
 
     - name: Terraform validation configuration step1
-      id: validate1
+      id: validate2
       run: terraform validate -no-color
 
     - name: Terraform destroy plan
-      id: validate2
+      id: validate22
       run: terraform plan -destroy
 
     - name: Terraform destroy element
-      id: destroy1
+      id: destroy2
       env:
         TIME: "${{ steps.time.outputs.time }}"
-      run: terraform destroy --auto-approve > ./log/Result_$TIME.log
+      run: terraform destroy --auto-approve > ./log/ResultDestroy_$TIME.log
       continue-on-error: true
 
     - name: CleanUp Process
@@ -194,4 +195,4 @@ jobs:
       name: Commit and push result back
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create environment"
+        message: "Commit for update result destroy 01_BaseEnvironment"
