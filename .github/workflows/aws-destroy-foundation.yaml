@@ -57,22 +57,21 @@ jobs:
     # Copy global configuration to target folder and configure
     - name: Copy global configuration, Configure TFState and Update public_key
       run: |
-       echo ${{ env.s3exits }}
-       if [[ ${{ env.s3exits }} == *"no"* ]]; then
+        if [[ ${{ env.s3exits }} == *"no"* ]]; then
         echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
         exit 1
-       fi
-       cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
-       cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
-       cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
-       cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
-       if [ ! -f ./00_provider.tf ]
-       then
-       echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
-       exit 1
-       fi
-       publickey="$(cat ./cert-template.pub)"
-       echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
+        fi
+        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
+        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
+        if [ ! -f ./00_provider.tf ]
+        then
+        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
+        exit 1
+        fi
+        publickey="$(cat ./cert-template.pub)"
+        echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
 
     - name: Get TimeStamp
       id: time
