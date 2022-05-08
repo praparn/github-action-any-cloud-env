@@ -100,6 +100,7 @@ jobs:
 
         # Extract folder name from commit
         folder_name=$commit_name | cut -f1 -d"-"
+        echo "Commit Name: "$commit_name
         echo "Final Folder Name: "$folder_name
         echo "FOLDER_NAME=$(echo $folder_name)" >> $GITHUB_ENV
 
