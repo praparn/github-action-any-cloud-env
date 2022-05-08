@@ -137,6 +137,7 @@ jobs:
         grep "\S" ../../99.Systemplate/system_variable.auto.tfvars > ../../99.Systemplate/system_variable.auto.tfvars.tmp && mv ../../99.Systemplate/system_variable.auto.tfvars.tmp ../../99.Systemplate/system_variable.auto.tfvars
         rm ./global_variable.auto.tfvars
         rm ./global_variables.tf
+        rm ./00_provider.tf
 
 
     - uses: actions-js/push@master
@@ -228,6 +229,7 @@ jobs:
         rm ./global_variables.tf
         rm ./system_variable.auto.tfvars
         rm ./system_variables.tf
+        rm ./00_provider.tf
 
     - uses: actions-js/push@master
       name: Commit and push result back

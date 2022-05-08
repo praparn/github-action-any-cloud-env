@@ -63,8 +63,8 @@ jobs:
         cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
         if [ ! -f ./00_provider.tf ]
         then
-        echo "Error !!!. TFState file is unavaliable !!!. Please check file of statefile before continute";
-        exit 1
+        cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
+        sed -i -e "s/<keyname>/02_InitialParameter.tfstate/g" ./00_provider.tf
         fi
         publickey="$(cat ./cert-template.pub)"
         echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
@@ -134,8 +134,8 @@ jobs:
        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
        if [ ! -f ./00_provider.tf ]
        then
-       echo "Error !!!. TFState file is unavaliable !!!. Please check file of statefile before continute";
-       exit 1
+       cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
+       sed -i -e "s/<keyname>/01_BaseEnvironment.tfstate/g" ./00_provider.tf
        fi
 
     - name: Load Terraform to operate
