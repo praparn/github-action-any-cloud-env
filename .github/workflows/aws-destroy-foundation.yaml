@@ -1,4 +1,4 @@
-name: 'AKS destroy cluster'
+name: 'AWS destroy cluster'
 on:
   push:
     tags:
@@ -55,7 +55,7 @@ jobs:
       name: Git checkout code
 
     # Copy global configuration to target folder and configure
-    - name: Copy global configuration and Configure TFState
+    - name: Copy global configuration, Configure TFState and Update public_key
       run: |
        if [[ ${{ env.s3exits }} == *"no"* ]]; then
         echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
@@ -70,6 +70,15 @@ jobs:
        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
        exit 1
        fi
+       publickey="$(cat ./cert-template.pub)"
+       echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
+
+    - name: Get TimeStamp
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      with:
+        timeZone: 7
+        format: 'YYYY-MM-DD-HH-mm-ss'
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
@@ -86,7 +95,9 @@ jobs:
 
     - name: Terraform destroy element
       id: destroy1
-      run: terraform destroy --auto-approve
+      env:
+          TIME: "${{ steps.time.outputs.time }}"
+      run: terraform destroy --auto-approve > ./log/Result_$TIME.log
       continue-on-error: true
 
     - name: CleanUp Process
@@ -135,7 +146,14 @@ jobs:
        echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute"
        exit 1
        fi
-    
+
+    - name: Get TimeStamp
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      with:
+        timeZone: 7
+        format: 'YYYY-MM-DD-HH-mm-ss'
+
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -149,9 +167,13 @@ jobs:
       id: validate1
       run: terraform validate -no-color
 
+    - name: Terraform destroy plan
+      id: validate2
+      run: terraform plan -destroy
+
     - name: Terraform destroy element
       id: destroy1
-      run: terraform destroy --auto-approve
+      run: terraform destroy --auto-approve > ./log/Result_$TIME.log
       continue-on-error: true
 
     - name: CleanUp Process
