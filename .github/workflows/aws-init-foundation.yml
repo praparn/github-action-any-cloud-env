@@ -53,7 +53,9 @@ jobs:
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
-
+      with:
+        fetch-depth: '0'
+        
       # Prepare Configuration and Seed file 
     - name: Setup system configruation
       run: |
@@ -62,7 +64,6 @@ jobs:
         sed -i -e "s/<bucket>/${{ secrets.AWS_BUCKETNAME }}/g" ./99.Systemplate/00_provider.tf
         sed -i -e "s/<region>/${{ secrets.AWS_REGION }}/g" ./99.Systemplate/00_provider.tf
         cat ./99.Systemplate/00_provider.tf
-
 
   create-foundation2:
     needs: [create-foundation1]
@@ -81,6 +82,8 @@ jobs:
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
+      with:
+        fetch-depth: '0'
 
     - name: Get TimeStamp
       id: time
