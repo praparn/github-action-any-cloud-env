@@ -69,13 +69,6 @@ jobs:
         publickey="$(cat ./cert-template.pub)"
         echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
 
-    - name: Get TimeStamp
-      id: time
-      uses: nanzm/get-time-action@v1.1
-      with:
-        timeZone: 7
-        format: 'YYYY-MM-DD-HH-mm-ss'
-
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -95,9 +88,7 @@ jobs:
 
     - name: Terraform destroy element
       id: destroy1
-      env:
-          TIME: "${{ steps.time.outputs.time }}"
-      run: terraform destroy --auto-approve > ./log/ResultDestroy_$TIME.log
+      run: terraform destroy --auto-approve
       continue-on-error: true
 
     - name: CleanUp Process
@@ -147,13 +138,6 @@ jobs:
        exit 1
        fi
 
-    - name: Get TimeStamp
-      id: time
-      uses: nanzm/get-time-action@v1.1
-      with:
-        timeZone: 7
-        format: 'YYYY-MM-DD-HH-mm-ss'
-
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
@@ -173,9 +157,7 @@ jobs:
 
     - name: Terraform destroy element
       id: destroy2
-      env:
-        TIME: "${{ steps.time.outputs.time }}"
-      run: terraform destroy --auto-approve > ./log/ResultDestroy_$TIME.log
+      run: terraform destroy --auto-approve
       continue-on-error: true
 
     - name: CleanUp Process
