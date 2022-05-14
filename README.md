@@ -214,15 +214,15 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
 
 1. Select template of element from sub folder under <element> and create new folder name (Ex: cp 2.Instance/01_Standard_Linux_Public 2.Instance/TestLinux) *Remark: Foldername cannot consist "-" in name
    ```sh
-   cp <element>/<template folder> <element folder>/<folder name>  
+   cp <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>/<template folder> <element folder>/<folder name>  
    ```
 
 2. Edit properties for create element on file "terraform.tfvars" (Please check description on file "variables.tf")
    ```sh
-   vi <element>/<folder name>/terraform.tfvars
+   vi <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>/<folder name>/terraform.tfvars
    ```
 
-3. Apply the change to create element by commit with message "<folder name>" and tag "aks-init-element-<element>-*"
+3. Apply the change to create element by commit with message "<2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>" and tag "aks-init-element-<element>-*"
    ```sh
    git pull
    git tag #check tag duplicate
@@ -233,54 +233,54 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-element-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.png" alt="githubaction" width="800" height="500">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.png" alt="githubaction" width="800" height="250">
 
 
 ### Modify Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
 
 1. Select template of element to modify under <element>
    ```sh
-   cd <element folder>/<folder name>  
+   cd <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>/<folder name>  
    ```
 
 2. Edit properties for modify element on file "terraform.tfvars" (Please check description on file "variables.tf")
    ```sh
-   vi <element>/<folder name>/terraform.tfvars
+   vi <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>/<folder name>/terraform.tfvars
    ```
 
-3. Apply the change to modify element by commit with message "<folder name>" and tag "aws-modify-<element>-*"
+3. Apply the change to modify element by commit with message "<2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>" and tag "aws-modify-<element>-*"
    ```sh
    git pull
    git tag #check tag duplicate
    echo "aws-modify-<element>-yyyymmddhhmmss" > ./result/result-aws
    git add -A
-   git commit -m "<folder name>-<your message>"
+   git commit -m "<2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-< folder name >-yyyymmddhhmmss"
    git tag aws-modify-<element>-yyyymmddhhmmss -m "aws-modify-<element>-yyyymmddhhmmss"
    git push --atomic origin <branch name> aws-modify-<element>-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws5.jpg" alt="githubaction" width="800" height="500">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws8.png" alt="githubaction" width="800" height="250">
 
 
 ### Destroy Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
 
 1. Select template of element to destroy under <element>
    ```sh
-   cd <element folder>/<folder name>  
+   cd <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>/<folder name>  
    ```
 
-2. Apply the change to destroy element by commit with message "<folder name>" and tag "aks-destroy-<element>-*"
+2. Apply the change to destroy element by commit with message "<2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>" and tag "aks-destroy-<element>-*"
    ```sh
    git pull
    git tag #check tag duplicate
    echo "aws-destroy-<element>-yyyymmddhhmmss" > ./result/result-aws
    git add -A
-   git commit -m "<folder name>-<your message>"
+   git commit -m "<2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-< folder name >-yyyymmddhhmmss"
    git tag aws-destroy-<element>-yyyymmddhhmmss -m "aws-destroy-<element>-yyyymmddhhmmss"
    git push --atomic origin <branch name> aws-destroy-<element>-yyyymmddhhmmss
    ```
 
-3. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws5.jpg" alt="githubaction" width="800" height="500">
+3. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws9.png" alt="githubaction" width="800" height="250">
 
 
 ### Destroy Environment and Foundation (work directory: ./aws) !!! Warning: This process is not recommend unless you never need to use the environment anymore !!!
