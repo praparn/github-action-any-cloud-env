@@ -189,7 +189,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-env-yyyymmddhhmmss
    ```
 
-5. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.png" alt="githubaction" width="800" height="250"><br><img src="img/aws3.png" alt="githubaction" width="800" height="300">
+5. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.png" alt="githubaction" width="800" height="250"><br><img src="img/aws3.png" alt="githubaction" width="800" height="200">
 
 6. Edit properties for create AWS foundation on file "99.Systemplate/global_variable.auto.tfvars" (Please check description on file "99.Systemplate/global_variables.tf")
    ```sh
@@ -228,7 +228,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git tag #check tag duplicate
    echo "aws-init-element-yyyymmddhhmmss" > ./result/result-aws
    git add -A
-   git commit -m "<element>-<folder name>-yyyymmddhhmmss"
+   git commit -m "<2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-< folder name >-yyyymmddhhmmss"
    git tag aws-init-element-yyyymmddhhmmss -m "aws-init-element-yyyymmddhhmmss"
    git push --atomic origin <branch name> aws-init-element-yyyymmddhhmmss
    ```
