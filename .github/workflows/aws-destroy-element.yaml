@@ -5,7 +5,7 @@ on:
       - 'aws-destroy-element*'
   pull_request:
     tags:
-      - 'aws-init-element*'
+      - 'aws-destroy-element*'
 
 jobs:
   check-environment-readiness:
