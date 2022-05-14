@@ -7,7 +7,7 @@ queue_prefixname = "praparn-rabbitmq-2022"
 
 queue_engtype = "RabbitMQ" 
 
-queue_instance_type = "mq.m5.large"
+queue_instance_type = "mq.m5.xlarge"
 
 queue_username = "queuemaster"
 
