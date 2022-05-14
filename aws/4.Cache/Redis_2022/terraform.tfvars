@@ -8,7 +8,7 @@ elscache_engine = "redis"
 
 elscache_replicas = 1
 
-elscache_instance_type = "cache.t3.micro"
+elscache_instance_type = "cache.t3.small"
 
 elscache_window = "sun:03:00-sun:05:00"
 
