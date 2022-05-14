@@ -11,9 +11,14 @@ jobs:
   check-environment-readiness:
     runs-on: ubuntu-latest
     env:
+      working-directory: ./aws/
       TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
       TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
       TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
 
     steps:
     # Checkout code
@@ -39,17 +44,24 @@ jobs:
           echo "TFState location is work properly";
         fi
 
-    # Verify VPC for housing all element
-    #- name: Verify VPC for housing element
-    #  run: |
-    #    
-    #    if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
-    #    then
-    #      echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
-    #      exit 1
-    #    elseif
-    #      echo "TFState location is work properly";
-    #    fi
+    # Verify VPC is existing all element
+    - name: Verify VPC is existing
+      run: |
+        while IFS= read -r line; do
+         echo "Text read from file: $line"
+         if $line 2>&1 | grep -q 'vpc'
+         then
+         vpc-id $line | cut -d'"' -f 2
+         fi
+        done < ./99.Systemplate/system_variable.auto.tfvars
+        
+        if aws ec2 describe-vpcs --vpc-ids $vpc-id 2>&1 | grep -q 'does not exist'
+        then
+          echo "Error !!!. VPC is unavaliable !!!. Please check foundation/create foundation before continute";
+          exit 1
+        elseif
+          echo "VPC is ready to use";
+        fi
 
   init-element:
     runs-on: ubuntu-latest
