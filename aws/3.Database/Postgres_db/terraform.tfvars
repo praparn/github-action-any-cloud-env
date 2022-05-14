@@ -5,7 +5,7 @@ rds_engine = "postgres"
 
 rds_prefixname = "pgking"
 
-rds_instance_type = "db.t3.small"
+rds_instance_type = "db.t3.large"
 
 rds_username = "sa" 
 
