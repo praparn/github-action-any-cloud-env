@@ -3,9 +3,11 @@ on:
   push:
     tags:
       - 'aws-init-element*'
+      - 'aws-modify-element*'
   pull_request:
     tags:
       - 'aws-init-element*'
+      - 'aws-modify-element*'
 
 jobs:
   check-environment-readiness:

@@ -249,7 +249,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    vi <element>/<folder name>/terraform.tfvars
    ```
 
-3. Apply the change to modify element by commit with message "<folder name>" and tag "aks-modify-<element>-*"
+3. Apply the change to modify element by commit with message "<folder name>" and tag "aws-modify-<element>-*"
    ```sh
    git pull
    git tag #check tag duplicate
