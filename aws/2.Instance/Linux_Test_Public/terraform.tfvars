@@ -11,7 +11,7 @@ instance_size = "non-prd-free"
 
 volume_type_std = "gp3"
 
-volume_size_boot_std = 10
+volume_size_boot_std = 20
 
 instance_monitor = true
 
