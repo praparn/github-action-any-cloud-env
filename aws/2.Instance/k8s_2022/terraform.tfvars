@@ -3,7 +3,7 @@
 ############################################################################################################
 instance_prefixname = "k8spraparn_2022"
 
-instances_per_az = 3
+instances_per_az = 1
 
 server_type = "kubernetes"
 
