@@ -189,7 +189,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-env-yyyymmddhhmmss
    ```
 
-5. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.png" alt="githubaction" width="800" height="250"><br><img src="img/aws3.png" alt="githubaction" width="800" height="200">
+5. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws2.png" alt="githubaction" width="800" height="250"><br><img src="img/aws3.png" alt="githubaction" width="800" height="220">
 
 6. Edit properties for create AWS foundation on file "99.Systemplate/global_variable.auto.tfvars" (Please check description on file "99.Systemplate/global_variables.tf")
    ```sh
@@ -207,7 +207,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-foundation-yyyymmddhhmmss
    ```
 
-8. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws5.png" alt="githubaction" width="800" height="250">
+8. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws5.png" alt="githubaction" width="800" height="270">
 
 
 ### Create Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
@@ -233,7 +233,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-init-element-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.png" alt="githubaction" width="800" height="250">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws7.png" alt="githubaction" width="800" height="270">
 
 
 ### Modify Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
@@ -259,7 +259,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-modify-<element>-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws8.png" alt="githubaction" width="800" height="250">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws8.png" alt="githubaction" width="800" height="270">
 
 
 ### Destroy Element (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
@@ -280,7 +280,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-destroy-<element>-yyyymmddhhmmss
    ```
 
-3. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws9.png" alt="githubaction" width="800" height="250">
+3. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws9.png" alt="githubaction" width="800" height="270">
 
 
 ### Destroy Environment and Foundation (work directory: ./aws) !!! Warning: This process is not recommend unless you never need to use the environment anymore !!!
@@ -296,7 +296,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-destroy-foundation-yyyymmddhhmmss
    ```
 
-2. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws6.png" alt="githubaction" width="800" height="250">
+2. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws6.png" alt="githubaction" width="800" height="270">
 
 3. Destory AWS environment by commit and tag "aws-destroy-env*" (!!! Warning: You need to check and empty all object on S3 first before operate This step)
    ```sh
@@ -309,7 +309,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
    git push --atomic origin <branch name> aws-destroy-env-yyyymmddhhmmss
    ```
 
-4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws4.png" alt="githubaction" width="800" height="350">
+4. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws4.png" alt="githubaction" width="800" height="270">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
