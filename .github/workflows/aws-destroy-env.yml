@@ -35,9 +35,8 @@ jobs:
       run: |
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1
         then
-        aws s3 rm s3://${{ secrets.AWS_BUCKETNAME }} --recursive
-        sleep 10
         aws s3api delete-objects --bucket ${{ secrets.AWS_BUCKETNAME }} --delete "$(aws s3api list-object-versions --bucket "${{ secrets.AWS_BUCKETNAME }}" --output=json --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')"
+        aws s3api delete-bucket --bucket ${{ secrets.AWS_BUCKETNAME }}  --region ${{ secrets.AWS_REGION }}
         fi
 
     - uses: actions-js/push@master
