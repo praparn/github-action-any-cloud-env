@@ -51,11 +51,11 @@ jobs:
          echo "Text read from file: $line"
          if $line 2>&1 | grep -q 'vpc'
          then
-         vpc-id $line | cut -d'"' -f 2
+         vpcid=$(echo $line | cut -d'"' -f 2)
          fi
         done < ./99.Systemplate/system_variable.auto.tfvars
-        
-        if aws ec2 describe-vpcs --vpc-ids $vpc-id 2>&1 | grep -q 'does not exist'
+
+        if aws ec2 describe-vpcs --vpc-ids $vpcid 2>&1 | grep -q 'does not exist'
         then
           echo "Error !!!. VPC is unavaliable !!!. Please check foundation/create foundation before continute";
           exit 1
