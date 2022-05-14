@@ -11,7 +11,7 @@ rds_username = "sa"
 
 rds_password = "srds22w49hs1234"
 
-rds_size = 50
+rds_size = 55
 
 rds_retention_period = 14
 
