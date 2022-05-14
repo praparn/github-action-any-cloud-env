@@ -36,6 +36,7 @@ jobs:
         if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1
         then
         aws s3 rm s3://${{ secrets.AWS_BUCKETNAME }} --recursive
+        sleep 10
         aws s3api delete-bucket --bucket ${{ secrets.AWS_BUCKETNAME }} --region ${{ secrets.AWS_REGION }} > ./result/aws-delete-env-result.txt
         fi
 

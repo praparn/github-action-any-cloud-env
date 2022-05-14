@@ -298,7 +298,7 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
 
 2. Check progress on tab "action" until it finished. (Optional: Verify result on web console/cli for double check)<br><img src="img/aws6.png" alt="githubaction" width="800" height="250">
 
-3. Destory AWS environment by commit and tag "aws-destroy-env*" (This delete S3 bucket for housing terraform state file and rollback all element to default)
+3. Destory AWS environment by commit and tag "aws-destroy-env*" (!!! Warning: You need to check and cleanup all object on S3 first before operate This step)
    ```sh
    git pull
    git tag #check existing tag
