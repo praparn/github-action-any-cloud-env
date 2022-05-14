@@ -187,7 +187,7 @@ jobs:
       run: terraform plan -destroy
       continue-on-error: false
 
-    - name: Terraform create
+    - name: Terraform destroy
       working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       id: apply1
       run: terraform destroy --auto-approve
