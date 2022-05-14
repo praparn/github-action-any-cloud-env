@@ -161,6 +161,37 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
   ```
 <br><img src="img/aws1.png" alt="githubaction" width="800" height="400">
 
+### Commit & Tag Summary:
+1. Initial & Destroy Environment:
+  1.1 Initial Environment:
+    Commit: aws-init-env-yyyymmddhhmmss
+    Tag:    aws-init-env-yyyymmddhhmmss
+
+  1.2 Destroy Environment:
+    Commit: aws-destroy-env-yyyymmddhhmmss
+    Tag:    aws-destroy-env-yyyymmddhhmmss
+
+2. Initial & Destroy Foundation:
+  2.1 Initial Foundation:
+    Commit: aws-init-foundation-yyyymmddhhmmss
+    Tag:    aws-init-foundation-yyyymmddhhmmss
+
+  2.2 Destroy Foundation:
+    Commit: aws-destroy-foundation-yyyymmddhhmmss
+    Tag:    aws-destroy-foundation-yyyymmddhhmmss
+
+3. Initial & Destroy Element:
+  3.1 Initial Element:
+    Commit: <element>-<folder name>
+    Tag:    aws-init-element-yyyymmddhhmmss
+
+  3.2 Initial Element:
+    Commit: <element>-<folder name>
+    Tag:    aws-modify-element-yyyymmddhhmmss
+
+  3.3 Destroy Foundation:
+    Commit: <element>-<folder name>
+    Tag:    aws-destroy-element-yyyymmddhhmmss
 
 ### Initial Environment and Foundation (work directory: ./aws)
 

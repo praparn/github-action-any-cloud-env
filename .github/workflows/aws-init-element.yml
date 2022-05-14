@@ -1,4 +1,4 @@
-name: 'AWS initial element'
+name: 'AWS initial/modify element'
 on:
   push:
     tags:
@@ -65,7 +65,7 @@ jobs:
           echo "VPC is ready to use";
         fi
 
-  init-element:
+  init-modify-element:
     runs-on: ubuntu-latest
     needs: [check-environment-readiness]
     env:
@@ -214,4 +214,4 @@ jobs:
         TIME: "${{ steps.time.outputs.time }}"
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create-${{ steps.setwrkdir.outputs.element_name }}-{{ steps.setwrkdir.outputs.folder_name }}"
+        message: "Commit for update result create-modify-${{ steps.setwrkdir.outputs.element_name }}-{{ steps.setwrkdir.outputs.folder_name }}"

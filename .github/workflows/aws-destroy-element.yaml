@@ -1,77 +1,213 @@
-name: 'AKS destroy cluster'
+name: 'AWS destroy element'
 on:
   push:
     tags:
-      - 'aks-cluster-destroy*'
+      - 'aws-destroy-element*'
   pull_request:
     tags:
-      - 'aks-cluster-destroy*'
+      - 'aws-init-element*'
 
 jobs:
-  destroy-cluster:
+  check-environment-readiness:
     runs-on: ubuntu-latest
     env:
-        working-directory: ./azure-aks/
-        TF_VAR_ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        TF_VAR_ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        TF_VAR_ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        TF_VAR_ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      working-directory: ./aws/
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
 
     defaults:
       run:
         working-directory: ${{env.working-directory}}
+
+    steps:
+    # Checkout code
+    - uses: actions/checkout@master
+      name: Git checkout code
+
+    # Configure AWS credential with region
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESSKEY }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Verify S3 bucket for housing state file
+    - name: Verify S3 bucket for housing state file
+      run: |
+        if aws s3 ls "s3://${{ secrets.AWS_BUCKETNAME }}" 2>&1 | grep -q 'The specified bucket does not exist'
+        then
+          echo "Error !!!. TFState location is unavaliable !!!. Please check location of statefile before continute";
+          exit 1
+        elseif
+          echo "TFState location is work properly";
+        fi
+
+    # Verify VPC is existing all element
+    - name: Verify VPC is existing
+      run: |
+        while IFS= read -r line; do
+         echo "Text read from file: $line"
+         if $line 2>&1 | grep -q 'vpc'
+         then
+         vpcid=$(echo $line | cut -d'"' -f 2)
+         fi
+        done < ./99.Systemplate/system_variable.auto.tfvars
+
+        if aws ec2 describe-vpcs --vpc-ids $vpcid 2>&1 | grep -q 'does not exist'
+        then
+          echo "Error !!!. VPC is unavaliable !!!. Please check foundation/create foundation before continute";
+          exit 1
+        elseif
+          echo "VPC is ready to use";
+        fi
+
+  destroy-element:
+    runs-on: ubuntu-latest
+    needs: [check-environment-readiness]
+    env:
+      working-directory: ./aws/
+      TF_VAR_access_key: ${{ secrets.AWS_ACCESSKEY }}
+      TF_VAR_secret_key: ${{ secrets.AWS_SECRET }}
+      TF_VAR_region: ${{ secrets.AWS_REGION }}
+
+    defaults:
+      run:
+        working-directory: ${{env.working-directory}}
+        
     steps:
       # Checkout code
     - uses: actions/checkout@master
       name: Git checkout code
 
-      # Seed file for system configuration
-    - name: Setup system configruation
-      run: | 
-        # Sed to setup environment
-        sed -i -e "s/###resource_group###/${{ secrets.AZURE_RESOURCEGROUP }}/g" ./terraform.tfvars
-        sed -i -e "s/###storage_accname###/${{ secrets.AZURE_STORAGEACCOUNT }}/g" ./terraform.tfvars
-        sed -i -e "s/###cluster_name###/${{ secrets.AZURE_CLUSTERNAME }}/g" ./terraform.tfvars
-        sed -i -e "s/###resource_group###/${{ secrets.AZURE_RESOURCEGROUP }}/g" ./00_provider.tf
-        sed -i -e "s/###storage_accname###/${{ secrets.AZURE_STORAGEACCOUNT }}/g" ./00_provider.tf
-        sed -i -e "s/###cluster_name###/${{ secrets.AZURE_CLUSTERNAME }}/g" ./00_provider.tf
+      # Extract Element and Folder Name
+    - name: Extract Element and Folder Name
+      id: setwrkdir
+      run: |
+        # Extrace tag&commit name
+        commit_name=${{ github.event.head_commit.message }}
+
+        # Switch case for tag element
+        case $commit_name in
+        *2.Instance*)
+          element_name=2.Instance
+          ;;
+
+        *3.Database*)
+          element_name=3.Database
+          ;;
+
+        *4.Cache*)
+          element_name=4.Cache
+          ;;
+
+        *5.Bucket*)
+          element_name=5.Bucket
+          ;;
+
+        *6.Queue*)
+          element_name=6.Queue
+          ;;
+
+        *7.Other*)
+          element_name=7.Other
+          ;;
+
+        *)
+          echo "Error validation!!!. The element name define on commit is not on allow value (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other). Process Abort"
+          exit 1
+          ;;
+
+        esac
+        echo "Element Name: "$element_name
+
+        # Extract folder name from commit
+        folder_name=$(echo $commit_name | cut -f2 -d"-")
+        echo "Final Folder Name: "$folder_name
+
+        if [ ! -d ./$element_name/$folder_name ]
+        then
+        echo "Error validation!!!. Your folder and element path is not exist (./$element_name/$folder_name). Process Abort"
+        exit 1
+        else
+        # Setup output for element and folder
+        echo "::set-output name=element_name::$element_name"
+        echo "::set-output name=folder_name::$folder_name"
+        echo "::set-output name=working_directory::./aws/$element_name/$folder_name"
+        echo "Export working directory: "./aws/$element_name/$folder_name
+        fi
+
+
+    - name: Get Time
+      id: time
+      uses: nanzm/get-time-action@v1.1
+      with:
+        timeZone: 7
+        format: 'YYYY-MM-DD-HH-mm-ss'
+
+    # Copy global configuration to target folder and configure
+    - name: Copy global configuration and Configure TFState
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
+      run: |
+        cp ../../99.Systemplate/global_variable.auto.tfvars ./global_variable.auto.tfvars
+        cp ../../99.Systemplate/global_variables.tf ./global_variables.tf
+        cp ../../99.Systemplate/system_variable.auto.tfvars ./system_variable.auto.tfvars
+        cp ../../99.Systemplate/system_variables.tf ./system_variables.tf
+        if [ ! -f ./00_provider.tf ]
+        then
+        echo "Error validation!!!. tfstate file is not avaliable. Process Abort"
+        exit 1
+        fi
 
     - name: Load Terraform to operate
       uses: hashicorp/setup-terraform@v1
       with:
-        terraform_version: 1.1.8
+        terraform_version: 1.1.9
 
-    - name: AKS readiness verify
-      id: fmt
+    - name: Terraform readiness verify
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      id: fmt1
       run: terraform fmt -check
       continue-on-error: true
     
-    - name: AKS initialize
-      id: init
-      run: terraform init -input=false
+    - name: Terraform initialize
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      id: init1
+      run: terraform init -backend-config="access_key=${{ secrets.AWS_ACCESSKEY }}" -backend-config="secret_key=${{ secrets.AWS_SECRET }}" -backend-config="region=${{ secrets.AWS_REGION }}" -input=false
 
-    - name: AKS validation configuration step1
-      id: validate
+    - name: Terraform validation configuration step1
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      id: validate1
       run: terraform validate -no-color
 
-    - name: AKS destroy farm
-      id: destroy
+    - name: Terraform configuration step2
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      id: validate2
+      run: terraform plan -destroy
+      continue-on-error: false
+
+    - name: Terraform create
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      id: apply1
       run: terraform destroy --auto-approve
       continue-on-error: true
 
-    - name: Rollback all Propertie KUBECONFIG
-      run: | 
-        # Cleanup KUBECONFIG
-        echo " " > aks-config
-        cp "./00_provider-template.tftemplate" "./00_provider.tf"
-        cp "./terraform-template.tfvarstemplate" "./terraform.tfvars"
+      # CleanUp process
+    - name: CleanUp temporary file
+      working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
+      run: |
+        rm ./global_variable.auto.tfvars
+        rm ./global_variables.tf
+        rm ./system_variable.auto.tfvars
+        rm ./system_variables.tf
 
     - uses: actions-js/push@master
       name: Commit and push result back
+      env:
+        TIME: "${{ steps.time.outputs.time }}"
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create environment"
+        message: "Commit for update result destroy-${{ steps.setwrkdir.outputs.element_name }}-{{ steps.setwrkdir.outputs.folder_name }}"
