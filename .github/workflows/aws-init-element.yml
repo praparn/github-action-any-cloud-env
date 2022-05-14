@@ -191,7 +191,7 @@ jobs:
       run: terraform plan -no-color -out=tfplan -input=false
       continue-on-error: false
 
-    - name: Terraform create
+    - name: Terraform apply
       working-directory: ${{ steps.setwrkdir.outputs.working_directory }}
       env:
         TIME: "${{ steps.time.outputs.time }}"
