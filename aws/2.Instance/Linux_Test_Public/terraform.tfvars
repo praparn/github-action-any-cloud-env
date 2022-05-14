@@ -1,9 +1,9 @@
 ############################################################################################################
 # Basic Variable Configuration                                                                             #
 ############################################################################################################
-instance_prefixname = "testlinux-std"
+instance_prefixname = "praparn-githubaction-test"
 
-instances = 2
+instances = 1
 
 server_type = "stdlinux"
 
@@ -11,7 +11,7 @@ instance_size = "non-prd-free"
 
 volume_type_std = "gp3"
 
-volume_size_boot_std = 100
+volume_size_boot_std = 10
 
 instance_monitor = true
 

@@ -111,15 +111,15 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
 
 * Create Elements: For create <element> (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other) *Remark: you must to copy template to create new folder before operate
   * Tag: aws-init-element-yyyymmddhhmmss
-  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-<folder name>-yyyymmddhhmmss
+  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-< folder name >-yyyymmddhhmmss
 
 * Modify Elements: For modify <element> (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
   * Tag: aws-modify-element-yyyymmddhhmmss
-  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-<folder name>-yyyymmddhhmmss
+  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-< folder name >-yyyymmddhhmmss
 
 * Destroy Elements: For destroy <element> (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
   * Tag: aws-destroy-element-yyyymmddhhmmss
-  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-<folder name>-yyyymmddhhmmss
+  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-< folder name >-yyyymmddhhmmss
 
 * Destroy Foundation: For destroy basic element (VPC, subnet, routing, policy etc)
   * Tag: aws-destroy-foundation-yyyymmddhhmmss
