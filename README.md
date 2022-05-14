@@ -42,7 +42,7 @@
 
 
 ## AWS Cloud Provider
-<img src="img/aws.png" alt="AWS" width="150" height="100">
+<img src="img/aws.png" alt="AWS" width="100" height="50">
 
 AWS Cloud Provider: Automation to create all environment on AWS cloud
 
