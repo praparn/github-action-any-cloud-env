@@ -102,32 +102,32 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
 ### Trigger on GitHub Action
 
 * Initial Environment: For create S3 bucket for housing all "state" file/check public key to operate
-  * Tag: aws-init-env-xxxxxxx
-  * Commit: <any thing>
+  * Tag: aws-init-env-yyyymmddhhmmss
+  * Commit: aws-init-env-yyyymmddhhmmss
 
 * Initial Foundation: For create basic element (VPC, subnet, routing, policy etc) (1.Environment/01_BaseEnvironment-02_InitialParameter)
-  * Tag: aws-init-foundation-xxxxxxx
-  * Commit: <any thing>
+  * Tag: aws-init-foundation-yyyymmddhhmmss
+  * Commit: aws-init-foundation-yyyymmddhhmmss
 
-* Create Elements: For create <element> (instance/database/cache/bucket/queue/other) *Remark: you must to copy template to create new folder before operate
-  * Tag: aws-create-<element>-xxxxxxx
-  * Commit: <folder name>-<your message>
+* Create Elements: For create <element> (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other) *Remark: you must to copy template to create new folder before operate
+  * Tag: aws-init-element-yyyymmddhhmmss
+  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-<folder name>-yyyymmddhhmmss
 
-* Modify Elements: For modify <element> (instance/database/cache/bucket/queue/other)
-  * Tag: aws-modify-<element>-xxxxxxx
-  * Commit: <folder name>-<your message>
+* Modify Elements: For modify <element> (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
+  * Tag: aws-modify-element-yyyymmddhhmmss
+  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-<folder name>-yyyymmddhhmmss
 
-* Destroy Elements: For destroy <element> (instance/database/cache/bucket/queue/other)
-  * Tag: aws-destroy-<element>-xxxxxxx
-  * Commit:<folder name>-<your message>
+* Destroy Elements: For destroy <element> (2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other)
+  * Tag: aws-destroy-element-yyyymmddhhmmss
+  * Commit: <2.Instance/3.Database/4.Cache/5.Bucket/6.Queue/7.Other>-<folder name>-yyyymmddhhmmss
 
 * Destroy Foundation: For destroy basic element (VPC, subnet, routing, policy etc)
-  * Tag: aws-destroy-foundation-xxxxxxx
-  * Commit: <any thing>
+  * Tag: aws-destroy-foundation-yyyymmddhhmmss
+  * Commit: aws-destroy-foundation-yyyymmddhhmmss
 
 * Destroy Environment: For destroy S3 bucket for housing all "state" file
-  * Tag: aws-destroy-env-xxxxxxx
-  * Commit: <any thing>
+  * Tag: aws-destroy-env-yyyymmddhhmmss
+  * Commit: aws-destroy-env-yyyymmddhhmmss
 
 
 ### Prerequisites
@@ -160,38 +160,6 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
   }
   ```
 <br><img src="img/aws1.png" alt="githubaction" width="800" height="400">
-
-### Commit & Tag Summary:
-1. Initial & Destroy Environment:
-  1.1 Initial Environment:
-    Commit: aws-init-env-yyyymmddhhmmss
-    Tag:    aws-init-env-yyyymmddhhmmss
-
-  1.2 Destroy Environment:
-    Commit: aws-destroy-env-yyyymmddhhmmss
-    Tag:    aws-destroy-env-yyyymmddhhmmss
-
-2. Initial & Destroy Foundation:
-  2.1 Initial Foundation:
-    Commit: aws-init-foundation-yyyymmddhhmmss
-    Tag:    aws-init-foundation-yyyymmddhhmmss
-
-  2.2 Destroy Foundation:
-    Commit: aws-destroy-foundation-yyyymmddhhmmss
-    Tag:    aws-destroy-foundation-yyyymmddhhmmss
-
-3. Initial & Destroy Element:
-  3.1 Initial Element:
-    Commit: <element>-<folder name>
-    Tag:    aws-init-element-yyyymmddhhmmss
-
-  3.2 Initial Element:
-    Commit: <element>-<folder name>
-    Tag:    aws-modify-element-yyyymmddhhmmss
-
-  3.3 Destroy Foundation:
-    Commit: <element>-<folder name>
-    Tag:    aws-destroy-element-yyyymmddhhmmss
 
 ### Initial Environment and Foundation (work directory: ./aws)
 
