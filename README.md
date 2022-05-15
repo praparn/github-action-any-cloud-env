@@ -10,6 +10,10 @@
    </p>
 </div>
 
+### Slide for Presentation
+* [Slide for Presentation](https://speakerdeck.com/praparn/githubaction-any-cloud)
+  
+
 ### Remark
 
 * All credential in this project was designed to store on "secrets" on github. If you new with this. Please kindly following [GitHub Secrets](https://github.com/Azure/actions-workflow-samples/blob/master/assets/create-secrets-for-GitHub-workflows.md)
