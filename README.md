@@ -12,7 +12,13 @@
 
 ### Slide for Presentation
 * [Slide for Presentation](https://speakerdeck.com/praparn/githubaction-any-cloud)
-  
+
+### Demo Video
+* [AWS initial environment and foundation](https://youtu.be/R9j9UoEs5l0)
+* [AWS initial element](https://youtu.be/wgoWA7QgL58)
+* [AWS modify element](https://youtu.be/x0zuvnydkpY)
+* [AWS destroy element](https://youtu.be/E6l4EeJ1hiw)
+* [AWS destroy foundation and foundation](https://youtu.be/Trt568UV6Zg)
 
 ### Remark
 
