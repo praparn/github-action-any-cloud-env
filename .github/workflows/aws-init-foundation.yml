@@ -63,7 +63,7 @@ jobs:
        then
         if [ ! -f ../../99.Systemplate/00_provider.tf ]
         then
-        echo "Error miss file "../../99.Systemplate/00_provider.tf". Please check and process init env first.
+        echo "Error miss file ../../99.Systemplate/00_provider.tf. Please check and process init env first."
         exit 1
         fi
         cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
@@ -148,7 +148,7 @@ jobs:
        then
         if [ ! -f ../../99.Systemplate/00_provider.tf ]
         then
-        echo "Error miss file "../../99.Systemplate/00_provider.tf". Please check and process init env first.
+        echo "Error miss file ../../99.Systemplate/00_provider.tf. Please check and process init env first."
         exit 1
         fi
         cp ../../99.Systemplate/00_provider.tf ./00_provider.tf
