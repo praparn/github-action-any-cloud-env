@@ -165,6 +165,9 @@ AWS Cloud Provider: Automation to create all environment on AWS cloud
   ```
 <br><img src="img/aws1.png" alt="githubaction" width="800" height="400">
 
+  3. Grant permission for allow action to update repository (Setting > Action > General > WorkFlow Permission)
+<br><img src="img/aws10.png" alt="githubaction" width="800" height="300">
+
 ### Initial Environment and Foundation (work directory: ./aws)
 
 1. Clone the repo
