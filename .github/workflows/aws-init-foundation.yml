@@ -113,6 +113,14 @@ jobs:
         rm ./global_variables.tf
         rm ./00_provider.tf
 
+    - name: Check certificate and generate certificate
+      run: |
+       if [ ! -f ../02_InitialParameter/cert-template.pub ]
+       then
+       echo "Warning !!! No public key found. System will help to auto-generate certificate for you. Anyway please copy your private key immediatly after this process complete for avoid let private key store on git repository !!!"
+       ssh-keygen -t rsa -N '' -f ./02_InitialParameter/cert-template
+       fi
+
     - uses: actions-js/push@master
       name: Commit and push result back
       with:
@@ -161,10 +169,8 @@ jobs:
       run: |
        if [ ! -f cert-template.pub ]
        then
-       echo "Warning !!! No public key found. System will help to auto-generate certificate for you. Anyway please copy your private key immediatly after this process complete for avoid let private key store on git repository !!!"
-       ssh-keygen -t rsa -N '' -f ./cert-template
-       publickey="$(cat ./cert-template.pub)"
-       echo "TF_VAR_public_key=$(echo $publickey)" >> $GITHUB_ENV
+       echo "Error certificate for public key (./cert-template.pub) is not avaliable. Please check file exists and run again"
+       exit 1
        else
        echo "Start to import public certificate to sytem variable"
        publickey="$(cat ./cert-template.pub)"
@@ -207,9 +213,3 @@ jobs:
         rm ./system_variable.auto.tfvars
         rm ./system_variables.tf
         rm ./00_provider.tf
-
-    - uses: actions-js/push@master
-      name: Commit and push result back
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        message: "Commit for update result create-01_BaseEnvironment"
